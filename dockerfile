@@ -7,7 +7,7 @@ RUN go mod download
 RUN go build -o app
 
 # Final Stage
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 WORKDIR /root/
 COPY --from=builder /app/app .
