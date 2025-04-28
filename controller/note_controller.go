@@ -18,6 +18,16 @@ func NewNoteController(repo repository.NoteRepository) *NoteController {
 	return &NoteController{Repo: repo}
 }
 
+// GetNotes
+// @Summary Get list of notes
+// @Description Retrieve all notes with pagination
+// @Tags Notes
+// @Accept json
+// @Produce json
+// @Param page query int false "Page number"
+// @Param limit query int false "Items per page"
+// @Success 200 {object} utils.PaginatedResponses
+// @Router /notes [get]
 func (ctl *NoteController) GetNotes(c *gin.Context) {
 	filters := map[string]any{
 		"title": c.Query("title"),
@@ -27,6 +37,15 @@ func (ctl *NoteController) GetNotes(c *gin.Context) {
 	utils.PaginatedResponse(c, data, code, entity, c.Request.Method, total, page, limit)
 }
 
+// GetNote
+// @Summary Get a single note by ID
+// @Description Get detail of a note by ID
+// @Tags Notes
+// @Accept json
+// @Produce json
+// @Param id path int true "Note ID"
+// @Success 200 {object} utils.StandardResponses
+// @Router /note/{id} [get]
 func (ctl *NoteController) GetNote(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
@@ -40,6 +59,15 @@ func (ctl *NoteController) GetNote(c *gin.Context) {
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
+// CreateNote
+// @Summary Create a new note
+// @Description Create a new note with title and description
+// @Tags Notes
+// @Accept json
+// @Produce json
+// @Param payload body models.NoteDTO true "Create note payload"
+// @Success 201 {object} utils.StandardResponses
+// @Router /note [post]
 func (ctl *NoteController) CreateNote(c *gin.Context) {
 	var note models.NoteDTO
 
@@ -51,6 +79,16 @@ func (ctl *NoteController) CreateNote(c *gin.Context) {
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
+// UpdateNote
+// @Summary Update a note by ID
+// @Description Update the title or description of a note
+// @Tags Notes
+// @Accept json
+// @Produce json
+// @Param id path int true "Note ID"
+// @Param payload body models.NoteDTO true "Update note payload"
+// @Success 200 {object} utils.StandardResponses
+// @Router /note/{id} [patch]
 func (ctl *NoteController) UpdateNote(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	var note models.NoteDTO
@@ -63,6 +101,15 @@ func (ctl *NoteController) UpdateNote(c *gin.Context) {
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
+// DeleteNote
+// @Summary Delete a note by ID
+// @Description Delete a note from database
+// @Tags Notes
+// @Accept json
+// @Produce json
+// @Param id path int true "Note ID"
+// @Success 200 {object} utils.StandardResponses
+// @Router /note/{id} [delete]
 func (ctl *NoteController) DeleteNote(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	data, code, entity, errors := ctl.Repo.Delete(uint(id))

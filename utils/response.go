@@ -7,6 +7,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type StandardResponses struct {
+	Status  string            `json:"status" example:"OK"`
+	Message string            `json:"message" example:"Successfully fetched note"`
+	Data    any               `json:"data"`
+	Errors  map[string]string `json:"errors,omitempty"`
+}
+
+type PaginatedMeta struct {
+	Page       int   `json:"page" example:"1"`
+	Limit      int   `json:"limit" example:"10"`
+	Total      int64 `json:"total" example:"100"`
+	TotalPages int   `json:"total_pages" example:"10"`
+}
+
+type PaginatedResponses struct {
+	Status  string        `json:"status" example:"OK"`
+	Message string        `json:"message" example:"Successfully fetched notes"`
+	Data    any           `json:"data"`
+	Meta    PaginatedMeta `json:"meta"`
+}
+
 func StatusMessage(code int, method string, entity any) string {
 	messages := map[int]string{
 		http.StatusBadRequest:          "Validation error %v",

@@ -1,5 +1,57 @@
 basePath: /api
-host: localhost:4000
+definitions:
+  models.NoteDTO:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  utils.PaginatedMeta:
+    properties:
+      limit:
+        example: 10
+        type: integer
+      page:
+        example: 1
+        type: integer
+      total:
+        example: 100
+        type: integer
+      total_pages:
+        example: 10
+        type: integer
+    type: object
+  utils.PaginatedResponses:
+    properties:
+      data: {}
+      message:
+        example: Successfully fetched notes
+        type: string
+      meta:
+        $ref: '#/definitions/utils.PaginatedMeta'
+      status:
+        example: OK
+        type: string
+    type: object
+  utils.StandardResponses:
+    properties:
+      data: {}
+      errors:
+        additionalProperties:
+          type: string
+        type: object
+      message:
+        example: Successfully fetched note
+        type: string
+      status:
+        example: OK
+        type: string
+    type: object
+host: https://service.pace11.my.id
 info:
   contact:
     email: rppratama1771@gmail.com
@@ -12,5 +64,118 @@ info:
   termsOfService: http://swagger.io/terms/
   title: Pace Service API
   version: "1.0"
-paths: {}
+paths:
+  /note:
+    post:
+      consumes:
+      - application/json
+      description: Create a new note with title and description
+      parameters:
+      - description: Create note payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.NoteDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      summary: Create a new note
+      tags:
+      - Notes
+  /note/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a note from database
+      parameters:
+      - description: Note ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      summary: Delete a note by ID
+      tags:
+      - Notes
+    get:
+      consumes:
+      - application/json
+      description: Get detail of a note by ID
+      parameters:
+      - description: Note ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      summary: Get a single note by ID
+      tags:
+      - Notes
+    patch:
+      consumes:
+      - application/json
+      description: Update the title or description of a note
+      parameters:
+      - description: Note ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update note payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.NoteDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      summary: Update a note by ID
+      tags:
+      - Notes
+  /notes:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all notes with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.PaginatedResponses'
+      summary: Get list of notes
+      tags:
+      - Notes
 swagger: "2.0"
