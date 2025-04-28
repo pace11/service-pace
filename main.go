@@ -1,3 +1,18 @@
+// @title Pace Service API
+// @version 1.0
+// @description This is the API documentation for Pace Service.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name Pace Support
+// @contact.url https://www.linkedin.com/in/muhammad-iriansyah-putra-pratama-a0120514b/
+// @contact.email rppratama1771@gmail.com
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:4000
+// @BasePath /api
+
 package main
 
 import (
@@ -6,8 +21,12 @@ import (
 	"service-pace11/config"
 	"service-pace11/routes"
 
+	_ "service-pace11/docs"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -17,6 +36,9 @@ func main() {
 	}
 
 	r := gin.Default()
+	// Swagger route
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	config.ConnectDB()
 	routes.SetupRoutes(r)
 	r.Run(os.Getenv("APP_PORT"))

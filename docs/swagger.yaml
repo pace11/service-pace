@@ -1,0 +1,16 @@
+basePath: /api
+host: localhost:4000
+info:
+  contact:
+    email: rppratama1771@gmail.com
+    name: Pace Support
+    url: https://www.linkedin.com/in/muhammad-iriansyah-putra-pratama-a0120514b/
+  description: This is the API documentation for Pace Service.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Pace Service API
+  version: "1.0"
+paths: {}
+swagger: "2.0"

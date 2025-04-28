@@ -28,6 +28,7 @@ func (r *noteRepo) Index(c *gin.Context, filters map[string]any) ([]models.NoteR
 	var total int64
 
 	query := utils.FilterByParams(config.DB.Model(&models.Note{}), filters)
+	query = query.Order("updated_at DESC")
 	query.Count(&total)
 
 	paginatedQuery, page, limit := utils.ApplyPagination(c, query)
@@ -92,7 +93,7 @@ func (r *noteRepo) Update(id uint, note *models.NoteDTO) (any, int, string, map[
 		return nil, http.StatusInternalServerError, "note", nil
 	}
 
-	return nil, http.StatusOK, "note", nil
+	return note, http.StatusOK, "note", nil
 }
 
 func (r *noteRepo) Delete(id uint) (any, int, string, map[string]string) {
