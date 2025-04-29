@@ -23,6 +23,7 @@ import (
 
 	_ "service-pace11/docs"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
@@ -36,6 +37,7 @@ func main() {
 	}
 
 	r := gin.Default()
+	r.Use(cors.Default())
 	// Swagger route
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
