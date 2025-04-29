@@ -51,7 +51,7 @@ definitions:
         example: OK
         type: string
     type: object
-host: https://service.pace11.my.id
+host: service.pace11.my.id
 info:
   contact:
     email: rppratama1771@gmail.com

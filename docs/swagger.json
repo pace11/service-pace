@@ -15,7 +15,7 @@
         },
         "version": "1.0"
     },
-    "host": "https://service.pace11.my.id",
+    "host": "service.pace11.my.id",
     "basePath": "/api",
     "paths": {
         "/note": {
