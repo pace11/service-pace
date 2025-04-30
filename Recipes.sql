@@ -1,24 +1,11 @@
-CREATE DATABASE IF NOT EXISTS service_pace;
-
-USE service_pace;
-
-CREATE TABLE `notes` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `title` text NOT NULL,
-  `description` text NOT NULL,
-  `created_at` timestamp DEFAULT (now()),
-  `updated_at` timestamp DEFAULT (now()),
-  `deleted_at` timestamp DEFAULT null
-);
-
 CREATE TABLE `users` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `address` text,
   `email` varchar(100) UNIQUE NOT NULL,
   `password` text NOT NULL,
-  `created_at` timestamp DEFAULT (now()),
-  `updated_at` timestamp DEFAULT (now())
+  `created_at` timestamp,
+  `updated_at` timestamp
 );
 
 CREATE TABLE `recipes` (
@@ -26,17 +13,17 @@ CREATE TABLE `recipes` (
   `user_id` int,
   `title` varchar(255) NOT NULL,
   `content` text NOT NULL,
-  `created_at` timestamp DEFAULT (now()),
-  `updated_at` timestamp DEFAULT (now()),
-  `deleted_at` timestamp DEFAULT null
+  `created_at` timestamp,
+  `updated_at` timestamp,
+  `deleted_at` timestamp
 );
 
 CREATE TABLE `likes` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int,
   `recipe_id` int,
-  `created_at` timestamp DEFAULT (now()),
-  `updated_at` timestamp DEFAULT (now())
+  `created_at` timestamp,
+  `updated_at` timestamp
 );
 
 CREATE TABLE `comments` (
@@ -44,16 +31,16 @@ CREATE TABLE `comments` (
   `user_id` int,
   `recipe_id` int,
   `content` text NOT NULL,
-  `created_at` timestamp DEFAULT (now()),
-  `updated_at` timestamp DEFAULT (now())
+  `created_at` timestamp,
+  `updated_at` timestamp
 );
 
 CREATE TABLE `save_recipes` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int,
   `recipe_id` int,
-  `created_at` timestamp DEFAULT (now()),
-  `updated_at` timestamp DEFAULT (now())
+  `created_at` timestamp,
+  `updated_at` timestamp
 );
 
 ALTER TABLE `recipes` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
