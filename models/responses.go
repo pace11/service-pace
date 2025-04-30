@@ -23,11 +23,14 @@ type UserEmbeddedResponse struct {
 }
 
 type RecipeResponse struct {
-	ID         uint                 `json:"id"`
-	Title      string               `json:"title"`
-	Content    string               `json:"content"`
-	LikesCount int64                `json:"likes_count"`
-	CreatedAt  time.Time            `json:"created_at"`
-	UpdatedAt  time.Time            `json:"updated_at"`
-	User       UserEmbeddedResponse `json:"user" gorm:"embedded;embeddedPrefix:user__"`
+	ID            uint                 `json:"id"`
+	Title         string               `json:"title"`
+	Content       string               `json:"content"`
+	LikesCount    int64                `json:"likes_count" gorm:"column:likes_count"`
+	CommentsCount int64                `json:"comments_count" gorm:"column:comments_count"`
+	IsLikeByMe    bool                 `json:"is_liked_by_me" gorm:"column:is_liked_by_me"`
+	IsMine        bool                 `json:"is_mine" gorm:"-"`
+	CreatedAt     time.Time            `json:"created_at"`
+	UpdatedAt     time.Time            `json:"updated_at"`
+	User          UserEmbeddedResponse `json:"user" gorm:"embedded;embeddedPrefix:user__"`
 }

@@ -25,4 +25,7 @@ func SetupRoutes(r *gin.Engine) {
 	// recipes
 	api.GET("/recipes", controllers.NewRecipeController(repository.NewRecipeRepository()).GetRecipes)
 	api.GET("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).GetRecipe)
+	api.POST("/recipe", controllers.NewRecipeController(repository.NewRecipeRepository()).CreateRecipe)
+	api.PATCH("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).UpdateRecipe)
+	api.DELETE("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).DeleteRecipe)
 }

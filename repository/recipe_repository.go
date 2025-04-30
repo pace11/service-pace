@@ -10,11 +10,11 @@ import (
 )
 
 type RecipeRepository interface {
-	Index(c *gin.Context, filters map[string]any) ([]models.Recipe, int, any, int64, int, int)
-	Show(c *gin.Context, id uint) (*models.Recipe, int, string, map[string]string)
-	// Save(note *models.NoteDTO) (any, int, string, map[string]string)
-	// Update(id uint, note *models.NoteDTO) (any, int, string, map[string]string)
-	// Delete(id uint) (any, int, string, map[string]string)
+	Index(c *gin.Context, filters map[string]any) ([]models.RecipeResponse, int, any, int64, int, int)
+	Show(c *gin.Context, id uint) (*models.RecipeResponse, int, string, map[string]string)
+	Save(c *gin.Context, recipe *models.RecipeDTO) (any, int, string, map[string]string)
+	Update(c *gin.Context, id uint, recipe *models.RecipeDTO) (any, int, string, map[string]string)
+	Delete(id uint) (any, int, string, map[string]string)
 }
 
 type recipeRepo struct{}
@@ -23,13 +23,13 @@ func NewRecipeRepository() RecipeRepository {
 	return &recipeRepo{}
 }
 
-func (r *recipeRepo) Index(c *gin.Context, filters map[string]any) ([]models.Recipe, int, any, int64, int, int) {
-	userIdRaw, exists := c.Get("user_id")
-	var recipes []models.Recipe
+func (r *recipeRepo) Index(c *gin.Context, filters map[string]any) ([]models.RecipeResponse, int, any, int64, int, int) {
+	userIdRaw, exist := c.Get("user_id")
+	var recipes []models.RecipeTable
 	var total int64
 
-	if !exists {
-		return nil, http.StatusUnauthorized, "token", 0, 0, 0
+	if !exist {
+		return nil, http.StatusUnauthorized, "access", 0, 0, 0
 	}
 
 	likesSubquery := config.DB.
@@ -47,7 +47,7 @@ func (r *recipeRepo) Index(c *gin.Context, filters map[string]any) ([]models.Rec
 		Select("recipe_id, true as is_liked_by_me").
 		Where("user_id = ?", userIdRaw)
 
-	query := config.DB.Model(&models.Recipe{}).
+	query := config.DB.Model(&models.RecipeTable{}).
 		Select(`
 			recipes.*,
 			users.id as user__id,
@@ -68,19 +68,35 @@ func (r *recipeRepo) Index(c *gin.Context, filters map[string]any) ([]models.Rec
 	paginatedQuery, page, limit := utils.ApplyPagination(c, query)
 	paginatedQuery.Scan(&recipes)
 
-	for i := range recipes {
-		recipes[i].IsMine = recipes[i].UserID == userIdRaw
+	var response []models.RecipeResponse
+	for _, r := range recipes {
+		response = append(response, models.RecipeResponse{
+			ID:            r.ID,
+			Title:         r.Title,
+			Content:       r.Content,
+			LikesCount:    r.LikesCount,
+			CommentsCount: r.CommentsCount,
+			IsLikeByMe:    r.IsLikeByMe,
+			IsMine:        r.UserID == userIdRaw,
+			CreatedAt:     r.CreatedAt,
+			UpdatedAt:     r.UpdatedAt,
+			User: models.UserEmbeddedResponse{
+				ID:    r.User.ID,
+				Name:  r.User.Name,
+				Email: r.User.Email,
+			},
+		})
 	}
 
-	return recipes, http.StatusOK, "recipe", total, page, limit
+	return response, http.StatusOK, "recipe", total, page, limit
 }
 
-func (r *recipeRepo) Show(c *gin.Context, id uint) (*models.Recipe, int, string, map[string]string) {
-	userIdRaw, exists := c.Get("user_id")
-	var recipe models.Recipe
+func (r *recipeRepo) Show(c *gin.Context, id uint) (*models.RecipeResponse, int, string, map[string]string) {
+	userIdRaw, exist := c.Get("user_id")
+	var recipe models.RecipeTable
 
-	if !exists {
-		return nil, http.StatusUnauthorized, "token", nil
+	if !exist {
+		return nil, http.StatusUnauthorized, "access", nil
 	}
 
 	likesSubquery := config.DB.
@@ -118,7 +134,78 @@ func (r *recipeRepo) Show(c *gin.Context, id uint) (*models.Recipe, int, string,
 		return nil, http.StatusNotFound, "recipe", nil
 	}
 
-	recipe.IsMine = recipe.UserID == userIdRaw
+	response := &models.RecipeResponse{
+		ID:            recipe.ID,
+		Title:         recipe.Title,
+		Content:       recipe.Content,
+		LikesCount:    recipe.LikesCount,
+		CommentsCount: recipe.CommentsCount,
+		IsLikeByMe:    recipe.IsLikeByMe,
+		IsMine:        recipe.UserID == userIdRaw,
+		User: models.UserEmbeddedResponse{
+			ID:    recipe.User.ID,
+			Name:  recipe.User.Name,
+			Email: recipe.User.Email,
+		},
+		CreatedAt: recipe.CreatedAt,
+		UpdatedAt: recipe.UpdatedAt,
+	}
 
-	return &recipe, http.StatusOK, "recipe", nil
+	return response, http.StatusOK, "recipe", nil
+}
+
+func (r *recipeRepo) Save(c *gin.Context, recipe *models.RecipeDTO) (any, int, string, map[string]string) {
+	userIdRaw, exist := c.Get("user_id")
+
+	if !exist {
+		return nil, http.StatusUnauthorized, "access", nil
+	}
+
+	recipeCreate := models.Recipe{
+		UserID:  userIdRaw.(uint),
+		Title:   recipe.Title,
+		Content: recipe.Content,
+	}
+
+	if err := config.DB.Create(&recipeCreate).Error; err != nil {
+		return nil, http.StatusInternalServerError, "recipe", nil
+	}
+
+	return recipe, http.StatusCreated, "recipe", nil
+}
+
+func (r *recipeRepo) Update(c *gin.Context, id uint, recipe *models.RecipeDTO) (any, int, string, map[string]string) {
+	userIdRaw, exist := c.Get("user_id")
+	var existing models.Recipe
+
+	if !exist {
+		return nil, http.StatusUnauthorized, "access", nil
+	}
+
+	if err := config.DB.Where("id = ? AND user_id = ?", id, userIdRaw).First(&existing).Error; err != nil {
+		return nil, http.StatusNotFound, "recipe", nil
+	}
+
+	if err := config.DB.Model(&existing).Updates(map[string]any{
+		"title":   recipe.Title,
+		"content": recipe.Content,
+	}).Error; err != nil {
+		return nil, http.StatusInternalServerError, "recipe", nil
+	}
+
+	return recipe, http.StatusOK, "recipe", nil
+}
+
+func (r *recipeRepo) Delete(id uint) (any, int, string, map[string]string) {
+	result := config.DB.Delete(&models.Recipe{}, id)
+
+	if result.Error != nil {
+		return nil, http.StatusInternalServerError, "recipe", nil
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, http.StatusNotFound, "recipe", nil
+	}
+
+	return nil, http.StatusOK, "recipe", nil
 }
