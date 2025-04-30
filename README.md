@@ -7,14 +7,14 @@
 
 ## 1️⃣ Recipes App 🍲
 Platform sharing recipe
-<div style="text-align:center;"><img src="./Recipes.png" width="500" /></div>
+<div align="center"><img src="./Recipes.png" width="500" style="text-align:center"/></div>
 <h3>Stack App</h3>
 <ul>
-<li>GO ✅</li>
-<li>MySQL ✅</li>
-<li>Gorm ✅</li>
-<li>JWT ✅</li>
-<li>Docker ✅</li>
-<li>Docker Compose ✅</li>
-<li>Github Action Autodeployment ✅</li>
+  <li>GO ✅</li>
+  <li>MySQL ✅</li>
+  <li>Gorm ✅</li>
+  <li>JWT ✅</li>
+  <li>Docker ✅</li>
+  <li>Docker Compose ✅</li>
+  <li>Github Action Autodeployment ✅</li>
 </ul>
