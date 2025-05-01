@@ -34,3 +34,11 @@ type RecipeResponse struct {
 	UpdatedAt     time.Time            `json:"updated_at"`
 	User          UserEmbeddedResponse `json:"user" gorm:"embedded;embeddedPrefix:user__"`
 }
+
+type LikeResponse struct {
+	ID        uint         `json:"id"`
+	RecipeID  uint         `json:"recipe_id"`
+	CreatedAt time.Time    `json:"created_at"`
+	UpdatedAt time.Time    `json:"updated_at"`
+	User      UserResponse `json:"user"`
+}

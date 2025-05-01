@@ -28,4 +28,9 @@ func SetupRoutes(r *gin.Engine) {
 	api.POST("/recipe", controllers.NewRecipeController(repository.NewRecipeRepository()).CreateRecipe)
 	api.PATCH("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).UpdateRecipe)
 	api.DELETE("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).DeleteRecipe)
+
+	// likes
+	api.GET("/like/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).GetLikeByRecipe)
+	api.POST("/like/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).LikeByRecipe)
+	api.POST("/unlike/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).UnlikeByRecipe)
 }
