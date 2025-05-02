@@ -1,15 +1,18 @@
 package repository
 
 import (
+	"errors"
 	"net/http"
 	"service-pace11/config"
 	"service-pace11/models"
+	"service-pace11/utils"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type LikeRepository interface {
-	Show(id uint) ([]models.LikeResponse, int, string, map[string]string)
+	Show(c *gin.Context, id uint) ([]models.LikeResponse, int, any, int64, int, int)
 	Save(c *gin.Context, id uint) (any, int, string, map[string]string)
 	Delete(c *gin.Context, id uint) (any, int, string, map[string]string)
 }
@@ -20,12 +23,15 @@ func NewLikeRepository() LikeRepository {
 	return &likeRepo{}
 }
 
-func (r *likeRepo) Show(id uint) ([]models.LikeResponse, int, string, map[string]string) {
+func (r *likeRepo) Show(c *gin.Context, id uint) ([]models.LikeResponse, int, any, int64, int, int) {
 	var likes []models.Like
+	var total int64
 
-	if err := config.DB.Where("recipe_id = ?", id).Order("created_at DESC").Preload("User").Find(&likes).Error; err != nil {
-		return nil, http.StatusNotFound, "like", nil
-	}
+	query := config.DB.Model(&models.Like{}).Where("recipe_id = ?", id).Order("created_at DESC").Preload("User")
+	query.Count(&total)
+
+	paginatedQuery, page, limit := utils.ApplyPagination(c, query)
+	paginatedQuery.Find(&likes)
 
 	var response []models.LikeResponse
 	for _, l := range likes {
@@ -42,31 +48,36 @@ func (r *likeRepo) Show(id uint) ([]models.LikeResponse, int, string, map[string
 		})
 	}
 
-	return response, http.StatusOK, "like", nil
+	return response, http.StatusOK, "like", total, page, limit
 }
 
 func (r *likeRepo) Save(c *gin.Context, id uint) (any, int, string, map[string]string) {
-	var existing models.Like
-	userIdRaw, exist := c.Get("user_id")
-
+	userIDVal, exist := c.Get("user_id")
 	if !exist {
 		return nil, http.StatusUnauthorized, "access", nil
 	}
 
-	if err := config.DB.Where("user_id = ? AND recipe_id = ?", userIdRaw, id).First(&existing).Error; err != nil {
-		return nil, http.StatusNotFound, "like", nil
+	userID, ok := userIDVal.(uint)
+	if !ok {
+		return nil, http.StatusInternalServerError, "invalid user_id", nil
 	}
 
-	if existing.UserID == userIdRaw {
+	var existing models.Like
+	err := config.DB.Where("user_id = ? AND recipe_id = ?", userID, id).First(&existing).Error
+	if err == nil {
 		return nil, http.StatusBadRequest, "you have liked this recipe", nil
 	}
 
-	likeRecipe := models.Like{
-		UserID:   userIdRaw.(uint),
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, http.StatusNotFound, "like", nil
+	}
+
+	newLike := models.Like{
+		UserID:   userID,
 		RecipeID: id,
 	}
 
-	if err := config.DB.Create(&likeRecipe).Error; err != nil {
+	if err := config.DB.Create(&newLike).Error; err != nil {
 		return nil, http.StatusInternalServerError, "like", nil
 	}
 

@@ -1,0 +1,21 @@
+name: Github CI
+
+on:
+  push:
+    tags:
+      - v**
+
+jobs:
+  run-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Running Build Service Pace
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            ls -la
+            df -h

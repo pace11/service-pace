@@ -15,6 +15,7 @@ type RecipeRepository interface {
 	Save(c *gin.Context, recipe *models.RecipeDTO) (any, int, string, map[string]string)
 	Update(c *gin.Context, id uint, recipe *models.RecipeDTO) (any, int, string, map[string]string)
 	Delete(id uint) (any, int, string, map[string]string)
+	Archive(id uint) (any, int, string, map[string]string)
 }
 
 type recipeRepo struct{}
@@ -197,6 +198,28 @@ func (r *recipeRepo) Update(c *gin.Context, id uint, recipe *models.RecipeDTO) (
 }
 
 func (r *recipeRepo) Delete(id uint) (any, int, string, map[string]string) {
+	result := config.DB.Delete(&models.Recipe{}, id)
+
+	if result.Error != nil {
+		return nil, http.StatusInternalServerError, "recipe", nil
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, http.StatusNotFound, "recipe", nil
+	}
+
+	return nil, http.StatusOK, "recipe", nil
+}
+
+func (r *recipeRepo) Archive(c *gin.Context, id uint) (any, int, string, map[string]string) {
+	var saveRecipe models.SavedRecipe
+	userIdRaw, exist := c.Get("user_id")
+
+	if !exist {
+		return nil, http.StatusUnauthorized, "access", nil
+	}
+
+	if err := config.DB.First(&models.SavedRecipe, id)
 	result := config.DB.Delete(&models.Recipe{}, id)
 
 	if result.Error != nil {

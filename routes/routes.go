@@ -33,4 +33,9 @@ func SetupRoutes(r *gin.Engine) {
 	api.GET("/like/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).GetLikeByRecipe)
 	api.POST("/like/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).LikeByRecipe)
 	api.POST("/unlike/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).UnlikeByRecipe)
+
+	// comments
+	api.GET("/comments/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository()).GetCommentsByRecipe)
+	api.POST("/comment/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository()).CreateComment)
+	api.DELETE("/comment/:id", controllers.NewCommentController(repository.NewCommentRepository()).DeleteComment)
 }

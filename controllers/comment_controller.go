@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"service-pace11/models"
 	"service-pace11/repository"
 	"service-pace11/utils"
 	"strconv"
@@ -9,15 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type LikeController struct {
-	Repo repository.LikeRepository
+type CommentController struct {
+	Repo repository.CommentRepository
 }
 
-func NewLikeController(repo repository.LikeRepository) *LikeController {
-	return &LikeController{Repo: repo}
+func NewCommentController(repo repository.CommentRepository) *CommentController {
+	return &CommentController{Repo: repo}
 }
 
-func (ctl *LikeController) GetLikeByRecipe(c *gin.Context) {
+func (ctl *CommentController) GetCommentsByRecipe(c *gin.Context) {
 	idRecipe := c.Param("id")
 	id, err := strconv.Atoi(idRecipe)
 
@@ -29,26 +30,31 @@ func (ctl *LikeController) GetLikeByRecipe(c *gin.Context) {
 	utils.PaginatedResponse(c, data, code, entity, c.Request.Method, total, page, limit)
 }
 
-func (ctl *LikeController) LikeByRecipe(c *gin.Context) {
+func (ctl *CommentController) CreateComment(c *gin.Context) {
+	var comment models.CommentDTO
 	idRecipe := c.Param("id")
 	id, err := strconv.Atoi(idRecipe)
+
+	if utils.BindAndValidate(c, &comment) != nil {
+		return
+	}
 
 	if err != nil {
 		utils.HttpResponse(c, nil, http.StatusBadRequest, "Invalid ID", c.Request.Method, nil)
 	}
 
-	data, code, entity, errors := ctl.Repo.Save(c, uint(id))
+	data, code, entity, errors := ctl.Repo.Save(c, uint(id), &comment)
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
-func (ctl *LikeController) UnlikeByRecipe(c *gin.Context) {
-	idRecipe := c.Param("id")
-	id, err := strconv.Atoi(idRecipe)
+func (ctl *CommentController) DeleteComment(c *gin.Context) {
+	idComment := c.Param("id")
+	id, err := strconv.Atoi(idComment)
 
 	if err != nil {
 		utils.HttpResponse(c, nil, http.StatusBadRequest, "Invalid ID", c.Request.Method, nil)
 	}
 
-	data, code, entity, errors := ctl.Repo.Delete(c, uint(id))
+	data, code, entity, errors := ctl.Repo.Delete(uint(id))
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }

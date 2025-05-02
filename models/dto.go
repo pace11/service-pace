@@ -15,3 +15,9 @@ type RecipeDTO struct {
 	Title   string `json:"title" binding:"required"`
 	Content string `json:"content" binding:"required"`
 }
+
+type CommentDTO struct {
+	UserID   uint   `json:"user_id"`
+	RecipeID string `json:"recipe_id"`
+	Content  string `json:"content" binding:"required"`
+}

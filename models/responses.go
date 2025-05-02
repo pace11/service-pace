@@ -42,3 +42,13 @@ type LikeResponse struct {
 	UpdatedAt time.Time    `json:"updated_at"`
 	User      UserResponse `json:"user"`
 }
+
+type CommentResponse struct {
+	ID        uint         `json:"id"`
+	RecipeID  uint         `json:"recipe_id"`
+	Content   string       `json:"content"`
+	IsMine    bool         `json:"is_mine" gorm:"-"`
+	CreatedAt time.Time    `json:"created_at"`
+	UpdatedAt time.Time    `json:"updated_at"`
+	User      UserResponse `json:"user"`
+}
