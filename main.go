@@ -13,6 +13,11 @@
 // @host service.pace11.my.id
 // @BasePath /api
 
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer" followed by a space and your JWT token.
+
 package main
 
 import (

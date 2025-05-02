@@ -1,12 +1,14 @@
 package repository
 
 import (
+	"errors"
 	"net/http"
 	"service-pace11/config"
 	"service-pace11/models"
 	"service-pace11/utils"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type RecipeRepository interface {
@@ -15,7 +17,8 @@ type RecipeRepository interface {
 	Save(c *gin.Context, recipe *models.RecipeDTO) (any, int, string, map[string]string)
 	Update(c *gin.Context, id uint, recipe *models.RecipeDTO) (any, int, string, map[string]string)
 	Delete(id uint) (any, int, string, map[string]string)
-	Archive(id uint) (any, int, string, map[string]string)
+	ArchiveIndex(c *gin.Context) ([]models.SavedRecipe, int, any, int64, int, int)
+	Archive(c *gin.Context, id uint) (any, int, string, map[string]string)
 }
 
 type recipeRepo struct{}
@@ -211,6 +214,37 @@ func (r *recipeRepo) Delete(id uint) (any, int, string, map[string]string) {
 	return nil, http.StatusOK, "recipe", nil
 }
 
+func (r *recipeRepo) ArchiveIndex(c *gin.Context) ([]models.SavedRecipe, int, any, int64, int, int) {
+	userIdRaw, exist := c.Get("user_id")
+	var saveRecipes []models.SavedRecipe
+	var total int64
+
+	if !exist {
+		return nil, http.StatusUnauthorized, "access", 0, 0, 0
+	}
+
+	query := config.DB.Model(&models.SavedRecipe{}).Where("user_id = ?", userIdRaw).Preload("User").Preload("Recipe")
+	query.Count(&total)
+
+	paginatedQuery, page, limit := utils.ApplyPagination(c, query)
+	paginatedQuery.Find(&saveRecipes)
+
+	var response []models.SavedRecipe
+	for _, s := range saveRecipes {
+		response = append(response, models.SavedRecipe{
+			ID:        s.ID,
+			UserID:    s.UserID,
+			RecipeID:  s.RecipeID,
+			User:      s.User,
+			Recipe:    s.Recipe,
+			CreatedAt: s.CreatedAt,
+			UpdatedAt: s.UpdatedAt,
+		})
+	}
+
+	return response, http.StatusOK, "save recipes", total, page, limit
+}
+
 func (r *recipeRepo) Archive(c *gin.Context, id uint) (any, int, string, map[string]string) {
 	var saveRecipe models.SavedRecipe
 	userIdRaw, exist := c.Get("user_id")
@@ -219,16 +253,23 @@ func (r *recipeRepo) Archive(c *gin.Context, id uint) (any, int, string, map[str
 		return nil, http.StatusUnauthorized, "access", nil
 	}
 
-	if err := config.DB.First(&models.SavedRecipe, id)
-	result := config.DB.Delete(&models.Recipe{}, id)
-
-	if result.Error != nil {
-		return nil, http.StatusInternalServerError, "recipe", nil
+	err := config.DB.Where("user_id = ? AND recipe_id = ?", userIdRaw, id).First(&saveRecipe).Error
+	if err == nil {
+		return nil, http.StatusBadRequest, "you have saved this recipe", nil
 	}
 
-	if result.RowsAffected == 0 {
-		return nil, http.StatusNotFound, "recipe", nil
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, http.StatusNotFound, "save recipe", nil
 	}
 
-	return nil, http.StatusOK, "recipe", nil
+	newSaveRecipe := models.SavedRecipe{
+		UserID:   userIdRaw.(uint),
+		RecipeID: id,
+	}
+
+	if err := config.DB.Create(&newSaveRecipe).Error; err != nil {
+		return nil, http.StatusInternalServerError, "save recipe", nil
+	}
+
+	return nil, http.StatusOK, "save recipe", nil
 }

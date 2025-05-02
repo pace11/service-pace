@@ -10,6 +10,18 @@ definitions:
     - description
     - title
     type: object
+  models.RecipeDTO:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - content
+    - title
+    type: object
   utils.PaginatedMeta:
     properties:
       limit:
@@ -178,4 +190,182 @@ paths:
       summary: Get list of notes
       tags:
       - Notes
+  /recipe:
+    post:
+      consumes:
+      - application/json
+      description: Create a new recipe with title and content
+      parameters:
+      - description: Create recipe payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.RecipeDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      security:
+      - BearerAuth: []
+      summary: Create a new recipe
+      tags:
+      - Recipes
+  /recipe/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a recipe from database
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      security:
+      - BearerAuth: []
+      summary: Delete a recipe by ID
+      tags:
+      - Recipes
+    get:
+      consumes:
+      - application/json
+      description: Get detail of a recipe by ID
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.PaginatedResponses'
+      security:
+      - BearerAuth: []
+      summary: Get a single recipe by ID
+      tags:
+      - Recipes
+    patch:
+      consumes:
+      - application/json
+      description: Update the title or content of a recipe
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update recipe payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.RecipeDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      security:
+      - BearerAuth: []
+      summary: Update a recipe by ID
+      tags:
+      - Recipes
+  /recipe/save/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Create a new recipe save with title and content
+      parameters:
+      - description: Recipe ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      security:
+      - BearerAuth: []
+      summary: Create a new recipe save
+      tags:
+      - Recipes
+  /recipe/saves:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all recipes save with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.PaginatedResponses'
+      security:
+      - BearerAuth: []
+      summary: Get list of recipes save
+      tags:
+      - Recipes
+  /recipes:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all recipes with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.PaginatedResponses'
+      security:
+      - BearerAuth: []
+      summary: Get list of recipes
+      tags:
+      - Recipes
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and your JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

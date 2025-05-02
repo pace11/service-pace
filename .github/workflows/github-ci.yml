@@ -18,4 +18,9 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             ls -la
-            df -h
+            cd pace-app/
+            sudo docker ps
+            cd service-go/
+            sudo git pull origin master
+            cd ..
+            sudo docker compose up -d --build service-go
