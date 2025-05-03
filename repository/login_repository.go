@@ -7,17 +7,17 @@ import (
 	"service-pace11/utils"
 )
 
-type LoginRepository interface {
+type AuthRepository interface {
 	Login(login *models.LoginDTO) (any, int, string, map[string]string)
 }
 
-type loginRepository struct{}
+type authRepository struct{}
 
-func NewLoginRepository() LoginRepository {
-	return &loginRepository{}
+func NewAuthRepository() AuthRepository {
+	return &authRepository{}
 }
 
-func (r *loginRepository) Login(login *models.LoginDTO) (any, int, string, map[string]string) {
+func (r *authRepository) Login(login *models.LoginDTO) (any, int, string, map[string]string) {
 	var user models.User
 
 	if err := config.DB.Where("email = ?", login.Email).First(&user).Error; err != nil {

@@ -19,7 +19,7 @@ func SetupRoutes(r *gin.Engine) {
 
 	// auth (login, register, forgot-password)
 	auth := api.Group("/auth")
-	auth.POST("/login", controllers.NewLoginController(repository.NewLoginRepository()).Login)
+	auth.POST("/login", controllers.NewAuthController(repository.NewAuthRepository()).Login)
 
 	api.Use(middlewares.JWTAuthMiddleware())
 	// recipes
@@ -32,12 +32,12 @@ func SetupRoutes(r *gin.Engine) {
 	api.POST("/recipe/save/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).ArchiveRecipe)
 
 	// likes
-	api.GET("/like/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).GetLikeByRecipe)
+	api.GET("/likes/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).GetLikesByRecipe)
 	api.POST("/like/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).LikeByRecipe)
 	api.POST("/unlike/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).UnlikeByRecipe)
 
 	// comments
 	api.GET("/comments/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository()).GetCommentsByRecipe)
-	api.POST("/comment/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository()).CreateComment)
+	api.POST("/comment/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository()).CommentByRecipe)
 	api.DELETE("/comment/:id", controllers.NewCommentController(repository.NewCommentRepository()).DeleteComment)
 }

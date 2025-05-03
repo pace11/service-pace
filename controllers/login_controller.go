@@ -8,15 +8,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type LoginController struct {
-	Repo repository.LoginRepository
+type AuthController struct {
+	Repo repository.AuthRepository
 }
 
-func NewLoginController(repo repository.LoginRepository) *LoginController {
-	return &LoginController{Repo: repo}
+func NewAuthController(repo repository.AuthRepository) *AuthController {
+	return &AuthController{Repo: repo}
 }
 
-func (ctl *LoginController) Login(c *gin.Context) {
+// AuthLogin
+// @Summary Login User
+// @Description Login User
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param payload body models.LoginDTO true "Login payload"
+// @Success 201 {object} utils.StandardResponses
+// @Router /auth/login [post]
+func (ctl *AuthController) Login(c *gin.Context) {
 	var payload models.LoginDTO
 
 	if utils.BindAndValidate(c, &payload) != nil {

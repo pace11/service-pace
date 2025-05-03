@@ -1,5 +1,15 @@
 basePath: /api
 definitions:
+  models.LoginDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
   models.NoteDTO:
     properties:
       description:
@@ -77,6 +87,137 @@ info:
   title: Pace Service API
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login User
+      parameters:
+      - description: Login payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      summary: Login User
+      tags:
+      - Auth
+  /comment/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a comment from database
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      security:
+      - BearerAuth: []
+      summary: Delete a comment by ID
+      tags:
+      - Comments
+  /comment/recipe/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Create a new comment by recipe
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      security:
+      - BearerAuth: []
+      summary: Create a comment by recipe
+      tags:
+      - Comments
+  /comments/recipe/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all comments with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.PaginatedResponses'
+      security:
+      - BearerAuth: []
+      summary: Get list of comments by recipe
+      tags:
+      - Comments
+  /like/recipe/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Create a new like by recipe
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      security:
+      - BearerAuth: []
+      summary: Create a like by recipe
+      tags:
+      - Likes
+  /likes/recipe/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all likes with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.PaginatedResponses'
+      security:
+      - BearerAuth: []
+      summary: Get list of likes by recipe
+      tags:
+      - Likes
   /note:
     post:
       consumes:
@@ -362,6 +503,23 @@ paths:
       summary: Get list of recipes
       tags:
       - Recipes
+  /unlike/recipe/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Create an unlike by recipe
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      security:
+      - BearerAuth: []
+      summary: Create an unlike by recipe
+      tags:
+      - Likes
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" followed by a space and your JWT token.

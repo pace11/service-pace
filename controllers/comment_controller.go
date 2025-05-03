@@ -18,6 +18,17 @@ func NewCommentController(repo repository.CommentRepository) *CommentController 
 	return &CommentController{Repo: repo}
 }
 
+// GetCommentsByRecipe
+// @Summary Get list of comments by recipe
+// @Description Retrieve all comments with pagination
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Param page query int false "Page number"
+// @Param limit query int false "Items per page"
+// @Success 200 {object} utils.PaginatedResponses
+// @Security BearerAuth
+// @Router /comments/recipe/{id} [get]
 func (ctl *CommentController) GetCommentsByRecipe(c *gin.Context) {
 	idRecipe := c.Param("id")
 	id, err := strconv.Atoi(idRecipe)
@@ -30,7 +41,16 @@ func (ctl *CommentController) GetCommentsByRecipe(c *gin.Context) {
 	utils.PaginatedResponse(c, data, code, entity, c.Request.Method, total, page, limit)
 }
 
-func (ctl *CommentController) CreateComment(c *gin.Context) {
+// CommentByRecipe
+// @Summary Create a comment by recipe
+// @Description Create a new comment by recipe
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Success 201 {object} utils.StandardResponses
+// @Security BearerAuth
+// @Router /comment/recipe/{id} [post]
+func (ctl *CommentController) CommentByRecipe(c *gin.Context) {
 	var comment models.CommentDTO
 	idRecipe := c.Param("id")
 	id, err := strconv.Atoi(idRecipe)
@@ -47,6 +67,16 @@ func (ctl *CommentController) CreateComment(c *gin.Context) {
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
+// DeleteComment
+// @Summary Delete a comment by ID
+// @Description Delete a comment from database
+// @Tags Comments
+// @Accept json
+// @Produce json
+// @Param id path int true "Comment ID"
+// @Success 200 {object} utils.StandardResponses
+// @Security BearerAuth
+// @Router /comment/{id} [delete]
 func (ctl *CommentController) DeleteComment(c *gin.Context) {
 	idComment := c.Param("id")
 	id, err := strconv.Atoi(idComment)
