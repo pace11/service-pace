@@ -1,0 +1,402 @@
+{
+	"info": {
+		"_postman_id": "fc022061-067c-4d98-9ded-606362b81d9f",
+		"name": "Service Pace",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "3638594"
+	},
+	"item": [
+		{
+			"name": "Recipes App",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "/login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"umar@mail.com\",\n    \"password\": \"umar\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BASE_URL}}/auth/login"
+							},
+							"response": []
+						},
+						{
+							"name": "/register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Umar Kotak\",\n    \"email\": \"umar@mail.com\",\n    \"password\": \"umar\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BASE_URL}}/auth/register"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "/user/me",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJlaGFuQG1haWwuY29tIiwiZXhwIjoxNzQ2NDU1MDQwLCJpYXQiOjE3NDYzNjg2NDAsIm5hbWUiOiJSZWhhbiBGaXJkYXVzIiwidXNlcl9pZCI6Mn0.C8nbCHr1vLwWTPI57wi3MOISHgP2cxK4Bu8vIF8BeAM"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Umar Kotak\",\n    \"email\": \"umar@mail.com\",\n    \"password\": \"umar\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BASE_URL}}/user/me"
+							},
+							"response": []
+						},
+						{
+							"name": "/user/update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVtYXJAbWFpbC5jb20iLCJleHAiOjE3NDY0NTgyNDIsImlhdCI6MTc0NjM3MTg0MiwibmFtZSI6IlVtYXIgS290YWsiLCJ1c2VyX2lkIjo4fQ.1rQQkQPghh5JtR7oiAOesp6BfQO8cFLs4skbJYE9vYs"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Umar Kotak Gege\",\n    \"email\": \"umar@mail.com\",\n    \"address\": \"Jl. menuju surga\",\n    \"password\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BASE_URL}}/user/update"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Recipes",
+					"item": [
+						{
+							"name": "/recipes",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyMjczODksImlhdCI6MTc0NjE0MDk4OSwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.E8mDaE4XwSZUHaYhdRqdgC-hwmwutP4kDSrI5I_YGvE"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/recipes?page=1",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"recipes"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "title",
+											"value": "nasi",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipe/saves",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJlaGFuQG1haWwuY29tIiwiZXhwIjoxNzQ2MjkyNDQxLCJpYXQiOjE3NDYyMDYwNDEsIm5hbWUiOiJSZWhhbiBGaXJkYXVzIiwidXNlcl9pZCI6Mn0.e9E7pwpbU5n5-M1Obqs25KFjHyFFLatPuGQ_v_OIij0"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/recipe/saves",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"recipe",
+										"saves"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "nasi",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipe/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYwMTkxNTQsImlhdCI6MTc0NTkzMjc1NCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.o4ped6EdqJHz_jvMu6hgywd3rnrZjh5udBzOp4UDLk8"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{BASE_URL}}/recipe/1"
+							},
+							"response": []
+						},
+						{
+							"name": "/recipe",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYwMTkxNTQsImlhdCI6MTc0NTkzMjc1NCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.o4ped6EdqJHz_jvMu6hgywd3rnrZjh5udBzOp4UDLk8"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"content\": \"test test baru\",\n    \"title\": \"title untuk test baru\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BASE_URL}}/recipe"
+							},
+							"response": []
+						},
+						{
+							"name": "/recipe/save/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyOTA5OTMsImlhdCI6MTc0NjIwNDU5MywibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0._xsNzSnz6vXhw4pZHTEMUXRzOWUZIMRRVLqUjiuAIe8"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BASE_URL}}/recipe/save/1"
+							},
+							"response": []
+						},
+						{
+							"name": "/recipe/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYwMTkxNTQsImlhdCI6MTc0NTkzMjc1NCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.o4ped6EdqJHz_jvMu6hgywd3rnrZjh5udBzOp4UDLk8"
+									}
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"content\": \"test test baru\",\n    \"title\": \"title baru [update]\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BASE_URL}}/recipe/3"
+							},
+							"response": []
+						},
+						{
+							"name": "/recipe/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYwMTkxNTQsImlhdCI6MTc0NTkzMjc1NCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.o4ped6EdqJHz_jvMu6hgywd3rnrZjh5udBzOp4UDLk8"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"content\": \"test test baru\",\n    \"title\": \"title untuk test baru [update]\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BASE_URL}}/recipe/3"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Likes",
+					"item": [
+						{
+							"name": "/like/recipe/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYxMDY1OTcsImlhdCI6MTc0NjAyMDE5NywibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.ASZ94lOMnXLAAWY9YhSeIk0wFqREcBz-QPthLydkSZc"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{BASE_URL}}/like/recipe/3"
+							},
+							"response": []
+						},
+						{
+							"name": "/like/recipe/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYxMDY1OTcsImlhdCI6MTc0NjAyMDE5NywibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.ASZ94lOMnXLAAWY9YhSeIk0wFqREcBz-QPthLydkSZc"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"url": "{{BASE_URL}}/like/recipe/3"
+							},
+							"response": []
+						},
+						{
+							"name": "/unlike/recipe/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYxMDY1OTcsImlhdCI6MTc0NjAyMDE5NywibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.ASZ94lOMnXLAAWY9YhSeIk0wFqREcBz-QPthLydkSZc"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"url": "{{BASE_URL}}/unlike/recipe/2"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Comments",
+					"item": [
+						{
+							"name": "/comments/recipe/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyMjczODksImlhdCI6MTc0NjE0MDk4OSwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.E8mDaE4XwSZUHaYhdRqdgC-hwmwutP4kDSrI5I_YGvE"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{BASE_URL}}/comments/recipe/1"
+							},
+							"response": []
+						},
+						{
+							"name": "/comment/recipe/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyMjczODksImlhdCI6MTc0NjE0MDk4OSwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.E8mDaE4XwSZUHaYhdRqdgC-hwmwutP4kDSrI5I_YGvE"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"content\": \"Pertamax kak !!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BASE_URL}}/comment/recipe/1"
+							},
+							"response": []
+						},
+						{
+							"name": "/comment/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyMjczODksImlhdCI6MTc0NjE0MDk4OSwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.E8mDaE4XwSZUHaYhdRqdgC-hwmwutP4kDSrI5I_YGvE"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "{{BASE_URL}}/comment/2"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
