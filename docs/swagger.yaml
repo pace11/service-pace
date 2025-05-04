@@ -32,6 +32,21 @@ definitions:
     - content
     - title
     type: object
+  models.RegisterDTO:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
   utils.PaginatedMeta:
     properties:
       limit:
@@ -107,6 +122,28 @@ paths:
           schema:
             $ref: '#/definitions/utils.StandardResponses'
       summary: Login User
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register User
+      parameters:
+      - description: Register payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      summary: Register User
       tags:
       - Auth
   /comment/{id}:
@@ -520,6 +557,40 @@ paths:
       summary: Create an unlike by recipe
       tags:
       - Likes
+  /user/me:
+    get:
+      consumes:
+      - application/json
+      description: Get detail user from jwt token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      security:
+      - BearerAuth: []
+      summary: Get a user data
+      tags:
+      - User
+  /user/update:
+    get:
+      consumes:
+      - application/json
+      description: Update user data from jwt token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.StandardResponses'
+      security:
+      - BearerAuth: []
+      summary: Update user data
+      tags:
+      - User
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" followed by a space and your JWT token.

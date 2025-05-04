@@ -17,11 +17,18 @@ func SetupRoutes(r *gin.Engine) {
 	api.PATCH("/note/:id", controllers.NewNoteController(repository.NewNoteRepository()).UpdateNote)
 	api.DELETE("/note/:id", controllers.NewNoteController(repository.NewNoteRepository()).DeleteNote)
 
-	// auth (login, register, forgot-password)
+	// auth
 	auth := api.Group("/auth")
 	auth.POST("/login", controllers.NewAuthController(repository.NewAuthRepository()).Login)
+	auth.POST("/register", controllers.NewAuthController(repository.NewAuthRepository()).Register)
 
 	api.Use(middlewares.JWTAuthMiddleware())
+
+	// user
+	user := api.Group("/user")
+	user.GET("/me", controllers.NewUserController(repository.NewUserRepository()).GetMe)
+	user.POST("/update", controllers.NewUserController(repository.NewUserRepository()).Update)
+
 	// recipes
 	api.GET("/recipes", controllers.NewRecipeController(repository.NewRecipeRepository()).GetRecipes)
 	api.GET("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).GetRecipe)

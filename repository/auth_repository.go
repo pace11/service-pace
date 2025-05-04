@@ -9,6 +9,7 @@ import (
 
 type AuthRepository interface {
 	Login(login *models.LoginDTO) (any, int, string, map[string]string)
+	Register(register *models.RegisterDTO) (any, int, string, map[string]string)
 }
 
 type authRepository struct{}
@@ -45,4 +46,27 @@ func (r *authRepository) Login(login *models.LoginDTO) (any, int, string, map[st
 	}
 
 	return response, http.StatusOK, "user", nil
+}
+
+func (r *authRepository) Register(register *models.RegisterDTO) (any, int, string, map[string]string) {
+	hashed, err := utils.HashPassword(register.Password)
+
+	if err != nil {
+		return nil, http.StatusInternalServerError, "hash password", nil
+	}
+
+	registerPayload := models.User{
+		Name:     register.Name,
+		Address:  &register.Address,
+		Email:    register.Email,
+		Password: hashed,
+	}
+
+	if err := config.DB.Save(&registerPayload).Error; err != nil {
+		return nil, http.StatusInternalServerError, "user", map[string]string{
+			"message": err.Error(),
+		}
+	}
+
+	return registerPayload, http.StatusCreated, "user", nil
 }

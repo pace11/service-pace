@@ -10,6 +10,13 @@ type NoteResponse struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
+type UserDetailResponse struct {
+	ID      uint   `json:"id"`
+	Name    string `json:"name"`
+	Email   string `json:"email"`
+	Address string `json:"address"`
+}
+
 type UserResponse struct {
 	ID    uint   `json:"id"`
 	Name  string `json:"name"`

@@ -21,3 +21,17 @@ type CommentDTO struct {
 	RecipeID string `json:"recipe_id"`
 	Content  string `json:"content" binding:"required"`
 }
+
+type RegisterDTO struct {
+	Name     string `json:"name" binding:"required"`
+	Address  string `json:"address"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type UserUpdateDTO struct {
+	Name     string `json:"name" binding:"required"`
+	Address  string `json:"address"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password"`
+}
