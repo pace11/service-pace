@@ -78,7 +78,7 @@ func (r *commentRepo) Save(c *gin.Context, id string, comment *models.CommentDTO
 		return nil, http.StatusInternalServerError, "invalid user_id", nil
 	}
 
-	if err := config.DB.First(&existing, id).Error; err != nil {
+	if err := config.DB.Where("id = ?", id).First(&existing).Error; err != nil {
 		return nil, http.StatusNotFound, "recipe", nil
 	}
 

@@ -24,6 +24,7 @@ func NewNotificationController(repo repository.NotificationRepository) *Notifica
 // @Param page query int false "Page number"
 // @Param limit query int false "Items per page"
 // @Success 200 {object} utils.PaginatedResponses
+// @Security BearerAuth
 // @Router /notifications [get]
 func (ctl *NotificationController) GetNotifications(c *gin.Context) {
 	data, code, entity, total, page, limit := ctl.Repo.Index(c)

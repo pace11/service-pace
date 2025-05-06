@@ -36,6 +36,7 @@ func (ctl *UserController) GetMe(c *gin.Context) {
 // @Tags User
 // @Accept json
 // @Produce json
+// @Param payload body models.UserUpdateDTO true "User payload"
 // @Success 200 {object} utils.StandardResponses
 // @Security BearerAuth
 // @Router /user/update [get]

@@ -15,12 +15,13 @@ func NewLikeController(repo repository.LikeRepository) *LikeController {
 	return &LikeController{Repo: repo}
 }
 
-// GetLikesByRecipe
-// @Summary Get list of likes by recipe
+// GetLikesByRecipeID
+// @Summary Get list of likes by recipe ID
 // @Description Retrieve all likes with pagination
 // @Tags Likes
 // @Accept json
 // @Produce json
+// @Param id path string true "Recipe ID (UUID)" format(uuid)
 // @Param page query int false "Page number"
 // @Param limit query int false "Items per page"
 // @Success 200 {object} utils.PaginatedResponses
@@ -33,9 +34,9 @@ func (ctl *LikeController) GetLikesByRecipe(c *gin.Context) {
 	utils.PaginatedResponse(c, data, code, entity, c.Request.Method, total, page, limit)
 }
 
-// LikeByRecipe
-// @Summary Create a like by recipe
-// @Description Create a new like by recipe
+// LikeByRecipeID
+// @Summary Create a like by recipe ID
+// @Description Create a new like by recipe ID
 // @Tags Likes
 // @Accept json
 // @Produce json
@@ -50,9 +51,9 @@ func (ctl *LikeController) LikeByRecipe(c *gin.Context) {
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
-// UnlikeByRecipe
-// @Summary Create an unlike by recipe
-// @Description Create an unlike by recipe
+// UnlikeByRecipeID
+// @Summary Create an unlike by recipe ID
+// @Description Create an unlike by recipe ID
 // @Tags Likes
 // @Accept json
 // @Produce json

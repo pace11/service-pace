@@ -41,7 +41,7 @@ func (ctl *CommentController) GetCommentsByRecipe(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "Recipe ID (UUID)" format(uuid)
-// @Param payload body models.NoteDTO true "Create note payload"
+// @Param payload body models.CommentDTO true "Comment payload"
 // @Success 201 {object} utils.StandardResponses
 // @Security BearerAuth
 // @Router /comment/recipe/{id} [post]

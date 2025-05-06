@@ -28,7 +28,7 @@ func (r *userRepository) GetMe(c *gin.Context) (*models.UserDetailResponse, int,
 		return nil, http.StatusUnauthorized, "access", nil
 	}
 
-	if err := config.DB.First(&userDetail, userIDVal).Error; err != nil {
+	if err := config.DB.Where("id = ?", userIDVal).First(&userDetail).Error; err != nil {
 		return nil, http.StatusNotFound, "user", nil
 	}
 
@@ -50,7 +50,7 @@ func (r *userRepository) Update(c *gin.Context, user *models.UserUpdateDTO) (any
 		return nil, http.StatusUnauthorized, "access", nil
 	}
 
-	if err := config.DB.First(&existing, userIDVal).Error; err != nil {
+	if err := config.DB.Where("id = ?", userIDVal).First(&existing).Error; err != nil {
 		return nil, http.StatusNotFound, "user", nil
 	}
 

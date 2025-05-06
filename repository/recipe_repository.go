@@ -69,7 +69,8 @@ func (r *recipeRepo) Index(c *gin.Context, filters map[string]any) ([]models.Rec
 		Joins("LEFT JOIN users ON users.id = recipes.user_id").
 		Joins("LEFT JOIN (?) as likes_subquery ON recipes.id = likes_subquery.recipe_id", likesSubquery).
 		Joins("LEFT JOIN (?) as comments_subquery ON recipes.id = comments_subquery.recipe_id", commentsSubQuery).
-		Joins("LEFT JOIN (?) as liked_by_me_subquery ON recipes.id = liked_by_me_subquery.recipe_id", likedByMeSubquery)
+		Joins("LEFT JOIN (?) as liked_by_me_subquery ON recipes.id = liked_by_me_subquery.recipe_id", likedByMeSubquery).
+		Order("created_at DESC")
 
 	query = utils.FilterByParams(query, filters)
 	query.Count(&total)
@@ -233,7 +234,7 @@ func (r *recipeRepo) SavedIndex(c *gin.Context) ([]models.SavedRecipe, int, any,
 		return nil, http.StatusUnauthorized, "access", 0, 0, 0
 	}
 
-	query := config.DB.Model(&models.SavedRecipe{}).Where("user_id = ?", userIdRaw).Preload("User").Preload("Recipe")
+	query := config.DB.Model(&models.SavedRecipe{}).Where("user_id = ?", userIdRaw).Preload("User").Preload("Recipe").Order("created_at DESC")
 	query.Count(&total)
 
 	paginatedQuery, page, limit := utils.ApplyPagination(c, query)

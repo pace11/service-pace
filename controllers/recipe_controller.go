@@ -68,7 +68,7 @@ func (ctl *RecipeController) GetRecipe(c *gin.Context) {
 // @Tags Recipes
 // @Accept json
 // @Produce json
-// @Param payload body models.RecipeDTO true "Create recipe payload"
+// @Param payload body models.RecipeDTO true "Recipe payload"
 // @Success 201 {object} utils.StandardResponses
 // @Security BearerAuth
 // @Router /recipe [post]
@@ -90,7 +90,7 @@ func (ctl *RecipeController) CreateRecipe(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "Recipe ID (UUID)" format(uuid)
-// @Param payload body models.RecipeDTO true "Update recipe payload"
+// @Param payload body models.RecipeDTO true "Recipe payload"
 // @Success 200 {object} utils.StandardResponses
 // @Security BearerAuth
 // @Router /recipe/{id} [patch]
@@ -138,8 +138,8 @@ func (ctl *RecipeController) SavedRecipeIndex(c *gin.Context) {
 	utils.PaginatedResponse(c, data, code, entity, c.Request.Method, total, page, limit)
 }
 
-// ArchiveRecipe
-// @Summary Create a new recipe save
+// RecipeSaveByID
+// @Summary Create a new recipe save by ID
 // @Description Create a new recipe save with title and content
 // @Tags Recipes
 // @Accept json

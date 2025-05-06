@@ -1,5 +1,12 @@
 basePath: /api
 definitions:
+  models.CommentDTO:
+    properties:
+      content:
+        type: string
+    required:
+    - content
+    type: object
   models.LoginDTO:
     properties:
       email:
@@ -26,8 +33,6 @@ definitions:
         type: string
       title:
         type: string
-      user_id:
-        type: integer
     required:
     - content
     - title
@@ -46,6 +51,20 @@ definitions:
     - email
     - name
     - password
+    type: object
+  models.UserUpdateDTO:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - name
     type: object
   utils.PaginatedMeta:
     properties:
@@ -152,11 +171,12 @@ paths:
       - application/json
       description: Delete a comment from database
       parameters:
-      - description: Comment ID
+      - description: Comment ID (UUID)
+        format: uuid
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -173,7 +193,20 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create a new comment by recipe
+      description: Create a new comment by recipe ID
+      parameters:
+      - description: Recipe ID (UUID)
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Comment payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.CommentDTO'
       produces:
       - application/json
       responses:
@@ -183,7 +216,7 @@ paths:
             $ref: '#/definitions/utils.StandardResponses'
       security:
       - BearerAuth: []
-      summary: Create a comment by recipe
+      summary: Create a comment by recipe ID
       tags:
       - Comments
   /comments/recipe/{id}:
@@ -192,6 +225,12 @@ paths:
       - application/json
       description: Retrieve all comments with pagination
       parameters:
+      - description: Recipe ID (UUID)
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
       - description: Page number
         in: query
         name: page
@@ -209,14 +248,21 @@ paths:
             $ref: '#/definitions/utils.PaginatedResponses'
       security:
       - BearerAuth: []
-      summary: Get list of comments by recipe
+      summary: Get list of comments by recipe ID
       tags:
       - Comments
   /like/recipe/{id}:
     post:
       consumes:
       - application/json
-      description: Create a new like by recipe
+      description: Create a new like by recipe ID
+      parameters:
+      - description: Recipe ID (UUID)
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -226,7 +272,7 @@ paths:
             $ref: '#/definitions/utils.StandardResponses'
       security:
       - BearerAuth: []
-      summary: Create a like by recipe
+      summary: Create a like by recipe ID
       tags:
       - Likes
   /likes/recipe/{id}:
@@ -235,6 +281,12 @@ paths:
       - application/json
       description: Retrieve all likes with pagination
       parameters:
+      - description: Recipe ID (UUID)
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
       - description: Page number
         in: query
         name: page
@@ -252,7 +304,7 @@ paths:
             $ref: '#/definitions/utils.PaginatedResponses'
       security:
       - BearerAuth: []
-      summary: Get list of likes by recipe
+      summary: Get list of likes by recipe ID
       tags:
       - Likes
   /note:
@@ -389,6 +441,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/utils.PaginatedResponses'
+      security:
+      - BearerAuth: []
       summary: Get list of notifications
       tags:
       - Notifications
@@ -398,7 +452,7 @@ paths:
       - application/json
       description: Create a new recipe with title and content
       parameters:
-      - description: Create recipe payload
+      - description: Recipe payload
         in: body
         name: payload
         required: true
@@ -422,11 +476,12 @@ paths:
       - application/json
       description: Delete a recipe from database
       parameters:
-      - description: Recipe ID
+      - description: Recipe ID (UUID)
+        format: uuid
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -444,11 +499,12 @@ paths:
       - application/json
       description: Get detail of a recipe by ID
       parameters:
-      - description: Recipe ID
+      - description: Recipe ID (UUID)
+        format: uuid
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -466,12 +522,13 @@ paths:
       - application/json
       description: Update the title or content of a recipe
       parameters:
-      - description: Recipe ID
+      - description: Recipe ID (UUID)
+        format: uuid
         in: path
         name: id
         required: true
-        type: integer
-      - description: Update recipe payload
+        type: string
+      - description: Recipe payload
         in: body
         name: payload
         required: true
@@ -495,11 +552,12 @@ paths:
       - application/json
       description: Create a new recipe save with title and content
       parameters:
-      - description: Recipe ID
+      - description: Recipe ID (UUID)
+        format: uuid
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -509,7 +567,7 @@ paths:
             $ref: '#/definitions/utils.StandardResponses'
       security:
       - BearerAuth: []
-      summary: Create a new recipe save
+      summary: Create a new recipe save by ID
       tags:
       - Recipes
   /recipe/saves:
@@ -568,7 +626,14 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create an unlike by recipe
+      description: Create an unlike by recipe ID
+      parameters:
+      - description: Recipe ID (UUID)
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -578,7 +643,7 @@ paths:
             $ref: '#/definitions/utils.StandardResponses'
       security:
       - BearerAuth: []
-      summary: Create an unlike by recipe
+      summary: Create an unlike by recipe ID
       tags:
       - Likes
   /user/me:
@@ -603,6 +668,13 @@ paths:
       consumes:
       - application/json
       description: Update user data from jwt token
+      parameters:
+      - description: User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserUpdateDTO'
       produces:
       - application/json
       responses:

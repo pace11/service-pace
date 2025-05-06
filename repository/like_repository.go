@@ -94,7 +94,7 @@ func (r *likeRepo) Save(c *gin.Context, id string) (any, int, string, map[string
 		fmt.Print("Notification not created")
 	}
 
-	return detailRecipe.UserID, http.StatusCreated, "like", nil
+	return nil, http.StatusCreated, "like", nil
 }
 
 func (r *likeRepo) Delete(c *gin.Context, id string) (any, int, string, map[string]string) {

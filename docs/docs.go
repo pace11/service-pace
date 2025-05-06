@@ -99,7 +99,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Create a new comment by recipe",
+                "description": "Create a new comment by recipe ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -109,7 +109,26 @@ const docTemplate = `{
                 "tags": [
                     "Comments"
                 ],
-                "summary": "Create a comment by recipe",
+                "summary": "Create a comment by recipe ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Recipe ID (UUID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Comment payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CommentDTO"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -140,8 +159,9 @@ const docTemplate = `{
                 "summary": "Delete a comment by ID",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Comment ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Comment ID (UUID)",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -174,8 +194,16 @@ const docTemplate = `{
                 "tags": [
                     "Comments"
                 ],
-                "summary": "Get list of comments by recipe",
+                "summary": "Get list of comments by recipe ID",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Recipe ID (UUID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "Page number",
@@ -206,7 +234,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Create a new like by recipe",
+                "description": "Create a new like by recipe ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -216,7 +244,17 @@ const docTemplate = `{
                 "tags": [
                     "Likes"
                 ],
-                "summary": "Create a like by recipe",
+                "summary": "Create a like by recipe ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Recipe ID (UUID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -244,8 +282,16 @@ const docTemplate = `{
                 "tags": [
                     "Likes"
                 ],
-                "summary": "Get list of likes by recipe",
+                "summary": "Get list of likes by recipe ID",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Recipe ID (UUID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "Page number",
@@ -443,6 +489,11 @@ const docTemplate = `{
         },
         "/notifications": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieve all notifications with pagination",
                 "consumes": [
                     "application/json"
@@ -498,7 +549,7 @@ const docTemplate = `{
                 "summary": "Create a new recipe",
                 "parameters": [
                     {
-                        "description": "Create recipe payload",
+                        "description": "Recipe payload",
                         "name": "payload",
                         "in": "body",
                         "required": true,
@@ -534,11 +585,12 @@ const docTemplate = `{
                 "tags": [
                     "Recipes"
                 ],
-                "summary": "Create a new recipe save",
+                "summary": "Create a new recipe save by ID",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Recipe ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Recipe ID (UUID)",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -616,8 +668,9 @@ const docTemplate = `{
                 "summary": "Get a single recipe by ID",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Recipe ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Recipe ID (UUID)",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -651,8 +704,9 @@ const docTemplate = `{
                 "summary": "Delete a recipe by ID",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Recipe ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Recipe ID (UUID)",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -686,14 +740,15 @@ const docTemplate = `{
                 "summary": "Update a recipe by ID",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Recipe ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Recipe ID (UUID)",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Update recipe payload",
+                        "description": "Recipe payload",
                         "name": "payload",
                         "in": "body",
                         "required": true,
@@ -761,7 +816,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Create an unlike by recipe",
+                "description": "Create an unlike by recipe ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -771,7 +826,17 @@ const docTemplate = `{
                 "tags": [
                     "Likes"
                 ],
-                "summary": "Create an unlike by recipe",
+                "summary": "Create an unlike by recipe ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Recipe ID (UUID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -828,6 +893,17 @@ const docTemplate = `{
                     "User"
                 ],
                 "summary": "Update user data",
+                "parameters": [
+                    {
+                        "description": "User payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UserUpdateDTO"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -840,6 +916,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.CommentDTO": {
+            "type": "object",
+            "required": [
+                "content"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                }
+            }
+        },
         "models.LoginDTO": {
             "type": "object",
             "required": [
@@ -882,9 +969,6 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },
@@ -894,6 +978,27 @@ const docTemplate = `{
                 "email",
                 "name",
                 "password"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserUpdateDTO": {
+            "type": "object",
+            "required": [
+                "email",
+                "name"
             ],
             "properties": {
                 "address": {
