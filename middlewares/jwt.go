@@ -32,7 +32,15 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		name, ok := claims["name"].(string)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Invalid token payload", "data": nil})
+			c.Abort()
+			return
+		}
+
 		c.Set("user_id", uint(userID))
+		c.Set("name", name)
 		c.Next()
 	}
 }

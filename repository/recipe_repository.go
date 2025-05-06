@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"service-pace11/config"
 	"service-pace11/models"
@@ -13,18 +14,22 @@ import (
 
 type RecipeRepository interface {
 	Index(c *gin.Context, filters map[string]any) ([]models.RecipeResponse, int, any, int64, int, int)
-	Show(c *gin.Context, id uint) (*models.RecipeResponse, int, string, map[string]string)
+	Show(c *gin.Context, id string) (*models.RecipeResponse, int, string, map[string]string)
 	Save(c *gin.Context, recipe *models.RecipeDTO) (any, int, string, map[string]string)
-	Update(c *gin.Context, id uint, recipe *models.RecipeDTO) (any, int, string, map[string]string)
-	Delete(id uint) (any, int, string, map[string]string)
-	ArchiveIndex(c *gin.Context) ([]models.SavedRecipe, int, any, int64, int, int)
-	Archive(c *gin.Context, id uint) (any, int, string, map[string]string)
+	Update(c *gin.Context, id string, recipe *models.RecipeDTO) (any, int, string, map[string]string)
+	Delete(id string) (any, int, string, map[string]string)
+	SavedIndex(c *gin.Context) ([]models.SavedRecipe, int, any, int64, int, int)
+	Saved(c *gin.Context, id string) (any, int, string, map[string]string)
 }
 
-type recipeRepo struct{}
+type recipeRepo struct {
+	notificationRepo NotificationRepository
+}
 
-func NewRecipeRepository() RecipeRepository {
-	return &recipeRepo{}
+func NewRecipeRepository(notificationRepo NotificationRepository) RecipeRepository {
+	return &recipeRepo{
+		notificationRepo: notificationRepo,
+	}
 }
 
 func (r *recipeRepo) Index(c *gin.Context, filters map[string]any) ([]models.RecipeResponse, int, any, int64, int, int) {
@@ -95,7 +100,7 @@ func (r *recipeRepo) Index(c *gin.Context, filters map[string]any) ([]models.Rec
 	return response, http.StatusOK, "recipe", total, page, limit
 }
 
-func (r *recipeRepo) Show(c *gin.Context, id uint) (*models.RecipeResponse, int, string, map[string]string) {
+func (r *recipeRepo) Show(c *gin.Context, id string) (*models.RecipeResponse, int, string, map[string]string) {
 	userIdRaw, exist := c.Get("user_id")
 	var recipe models.RecipeTable
 
@@ -165,8 +170,13 @@ func (r *recipeRepo) Save(c *gin.Context, recipe *models.RecipeDTO) (any, int, s
 		return nil, http.StatusUnauthorized, "access", nil
 	}
 
+	userID, ok := userIdRaw.(string)
+	if !ok {
+		return nil, http.StatusInternalServerError, "invalid user_id", nil
+	}
+
 	recipeCreate := models.Recipe{
-		UserID:  userIdRaw.(uint),
+		UserID:  userID,
 		Title:   recipe.Title,
 		Content: recipe.Content,
 	}
@@ -178,7 +188,7 @@ func (r *recipeRepo) Save(c *gin.Context, recipe *models.RecipeDTO) (any, int, s
 	return recipe, http.StatusCreated, "recipe", nil
 }
 
-func (r *recipeRepo) Update(c *gin.Context, id uint, recipe *models.RecipeDTO) (any, int, string, map[string]string) {
+func (r *recipeRepo) Update(c *gin.Context, id string, recipe *models.RecipeDTO) (any, int, string, map[string]string) {
 	userIdRaw, exist := c.Get("user_id")
 	var existing models.Recipe
 
@@ -200,7 +210,7 @@ func (r *recipeRepo) Update(c *gin.Context, id uint, recipe *models.RecipeDTO) (
 	return recipe, http.StatusOK, "recipe", nil
 }
 
-func (r *recipeRepo) Delete(id uint) (any, int, string, map[string]string) {
+func (r *recipeRepo) Delete(id string) (any, int, string, map[string]string) {
 	result := config.DB.Delete(&models.Recipe{}, id)
 
 	if result.Error != nil {
@@ -214,7 +224,7 @@ func (r *recipeRepo) Delete(id uint) (any, int, string, map[string]string) {
 	return nil, http.StatusOK, "recipe", nil
 }
 
-func (r *recipeRepo) ArchiveIndex(c *gin.Context) ([]models.SavedRecipe, int, any, int64, int, int) {
+func (r *recipeRepo) SavedIndex(c *gin.Context) ([]models.SavedRecipe, int, any, int64, int, int) {
 	userIdRaw, exist := c.Get("user_id")
 	var saveRecipes []models.SavedRecipe
 	var total int64
@@ -232,7 +242,7 @@ func (r *recipeRepo) ArchiveIndex(c *gin.Context) ([]models.SavedRecipe, int, an
 	var response []models.SavedRecipe
 	for _, s := range saveRecipes {
 		response = append(response, models.SavedRecipe{
-			ID:        s.ID,
+			UUIDModel: models.UUIDModel{ID: s.ID},
 			UserID:    s.UserID,
 			RecipeID:  s.RecipeID,
 			User:      s.User,
@@ -245,13 +255,21 @@ func (r *recipeRepo) ArchiveIndex(c *gin.Context) ([]models.SavedRecipe, int, an
 	return response, http.StatusOK, "save recipes", total, page, limit
 }
 
-func (r *recipeRepo) Archive(c *gin.Context, id uint) (any, int, string, map[string]string) {
+func (r *recipeRepo) Saved(c *gin.Context, id string) (any, int, string, map[string]string) {
+	var detailRecipe models.Recipe
 	var saveRecipe models.SavedRecipe
 	userIdRaw, exist := c.Get("user_id")
 
 	if !exist {
 		return nil, http.StatusUnauthorized, "access", nil
 	}
+
+	userID, ok := userIdRaw.(string)
+	if !ok {
+		return nil, http.StatusInternalServerError, "invalid user_id", nil
+	}
+
+	config.DB.Where("id = ? ", id).Preload("User").Find(&detailRecipe)
 
 	err := config.DB.Where("user_id = ? AND recipe_id = ?", userIdRaw, id).First(&saveRecipe).Error
 	if err == nil {
@@ -263,12 +281,17 @@ func (r *recipeRepo) Archive(c *gin.Context, id uint) (any, int, string, map[str
 	}
 
 	newSaveRecipe := models.SavedRecipe{
-		UserID:   userIdRaw.(uint),
+		UserID:   userID,
 		RecipeID: id,
 	}
 
 	if err := config.DB.Create(&newSaveRecipe).Error; err != nil {
 		return nil, http.StatusInternalServerError, "save recipe", nil
+	}
+
+	created := r.notificationRepo.Save(c, detailRecipe.UserID, userID, string(models.SaveType), detailRecipe.Title)
+	if !created {
+		fmt.Print("Notification not created")
 	}
 
 	return nil, http.StatusOK, "save recipe", nil

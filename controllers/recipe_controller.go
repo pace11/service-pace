@@ -1,11 +1,9 @@
 package controllers
 
 import (
-	"net/http"
 	"service-pace11/models"
 	"service-pace11/repository"
 	"service-pace11/utils"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,33 +28,37 @@ func NewRecipeController(repo repository.RecipeRepository) *RecipeController {
 // @Security BearerAuth
 // @Router /recipes [get]
 func (ctl *RecipeController) GetRecipes(c *gin.Context) {
+	userIdRaw, exist := c.Get("user_id")
+
 	filters := map[string]any{
 		"title": c.Query("title"),
+	}
+
+	if !exist {
+		return
+	}
+
+	if c.Query("type") == "me" {
+		filters["user_id"] = userIdRaw
 	}
 
 	data, code, entity, total, page, limit := ctl.Repo.Index(c, filters)
 	utils.PaginatedResponse(c, data, code, entity, c.Request.Method, total, page, limit)
 }
 
-// GetRecipe
+// GetRecipeByID
 // @Summary Get a single recipe by ID
 // @Description Get detail of a recipe by ID
 // @Tags Recipes
 // @Accept json
 // @Produce json
-// @Param id path int true "Recipe ID"
+// @Param id path string true "Recipe ID (UUID)" format(uuid)
 // @Success 200 {object} utils.PaginatedResponses
 // @Security BearerAuth
 // @Router /recipe/{id} [get]
 func (ctl *RecipeController) GetRecipe(c *gin.Context) {
 	idRecipe := c.Param("id")
-	id, err := strconv.Atoi(idRecipe)
-
-	if err != nil {
-		utils.HttpResponse(c, nil, http.StatusBadRequest, "Invalid ID", c.Request.Method, nil)
-	}
-
-	data, code, entity, errors := ctl.Repo.Show(c, uint(id))
+	data, code, entity, errors := ctl.Repo.Show(c, idRecipe)
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
@@ -81,42 +83,42 @@ func (ctl *RecipeController) CreateRecipe(c *gin.Context) {
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
-// UpdateRecipe
+// UpdateRecipeByID
 // @Summary Update a recipe by ID
 // @Description Update the title or content of a recipe
 // @Tags Recipes
 // @Accept json
 // @Produce json
-// @Param id path int true "Recipe ID"
+// @Param id path string true "Recipe ID (UUID)" format(uuid)
 // @Param payload body models.RecipeDTO true "Update recipe payload"
 // @Success 200 {object} utils.StandardResponses
 // @Security BearerAuth
 // @Router /recipe/{id} [patch]
 func (ctl *RecipeController) UpdateRecipe(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
+	idRecipe := c.Param("id")
 	var recipe models.RecipeDTO
 
 	if utils.BindAndValidate(c, &recipe) != nil {
 		return
 	}
 
-	data, code, entity, errors := ctl.Repo.Update(c, uint(id), &recipe)
+	data, code, entity, errors := ctl.Repo.Update(c, idRecipe, &recipe)
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
-// DeleteRecipe
+// DeleteRecipeByID
 // @Summary Delete a recipe by ID
 // @Description Delete a recipe from database
 // @Tags Recipes
 // @Accept json
 // @Produce json
-// @Param id path int true "Recipe ID"
+// @Param id path string true "Recipe ID (UUID)" format(uuid)
 // @Success 200 {object} utils.StandardResponses
 // @Security BearerAuth
 // @Router /recipe/{id} [delete]
 func (ctl *RecipeController) DeleteRecipe(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	data, code, entity, errors := ctl.Repo.Delete(uint(id))
+	idRecipe := c.Param("id")
+	data, code, entity, errors := ctl.Repo.Delete(idRecipe)
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
@@ -131,8 +133,8 @@ func (ctl *RecipeController) DeleteRecipe(c *gin.Context) {
 // @Success 200 {object} utils.PaginatedResponses
 // @Security BearerAuth
 // @Router /recipe/saves [get]
-func (ctl *RecipeController) ArchiveRecipeIndex(c *gin.Context) {
-	data, code, entity, total, page, limit := ctl.Repo.ArchiveIndex(c)
+func (ctl *RecipeController) SavedRecipeIndex(c *gin.Context) {
+	data, code, entity, total, page, limit := ctl.Repo.SavedIndex(c)
 	utils.PaginatedResponse(c, data, code, entity, c.Request.Method, total, page, limit)
 }
 
@@ -142,12 +144,12 @@ func (ctl *RecipeController) ArchiveRecipeIndex(c *gin.Context) {
 // @Tags Recipes
 // @Accept json
 // @Produce json
-// @Param id path int true "Recipe ID"
+// @Param id path string true "Recipe ID (UUID)" format(uuid)
 // @Success 201 {object} utils.StandardResponses
 // @Security BearerAuth
 // @Router /recipe/save/{id} [post]
-func (ctl *RecipeController) ArchiveRecipe(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	data, code, entity, errors := ctl.Repo.Archive(c, uint(id))
+func (ctl *RecipeController) SavedRecipe(c *gin.Context) {
+	idRecipe := c.Param("id")
+	data, code, entity, errors := ctl.Repo.Saved(c, idRecipe)
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }

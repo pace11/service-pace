@@ -368,6 +368,30 @@ paths:
       summary: Get list of notes
       tags:
       - Notes
+  /notifications:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all notifications with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.PaginatedResponses'
+      summary: Get list of notifications
+      tags:
+      - Notifications
   /recipe:
     post:
       consumes:

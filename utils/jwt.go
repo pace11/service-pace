@@ -8,7 +8,7 @@ import (
 
 var secretKey = []byte("your-secret-key")
 
-func GenerateToken(userID uint, email string, name string) (string, error) {
+func GenerateToken(userID string, email string, name string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
 		"name":    name,

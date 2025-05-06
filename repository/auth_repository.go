@@ -5,6 +5,7 @@ import (
 	"service-pace11/config"
 	"service-pace11/models"
 	"service-pace11/utils"
+	"time"
 )
 
 type AuthRepository interface {
@@ -41,8 +42,9 @@ func (r *authRepository) Login(login *models.LoginDTO) (any, int, string, map[st
 	}
 
 	response := map[string]any{
-		"token": token,
-		"user":  userResponse,
+		"token":   token,
+		"expires": time.Now().Add(time.Hour * 24).UTC().Format(time.RFC3339),
+		"user":    userResponse,
 	}
 
 	return response, http.StatusOK, "user", nil

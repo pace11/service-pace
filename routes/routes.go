@@ -30,21 +30,24 @@ func SetupRoutes(r *gin.Engine) {
 	user.POST("/update", controllers.NewUserController(repository.NewUserRepository()).Update)
 
 	// recipes
-	api.GET("/recipes", controllers.NewRecipeController(repository.NewRecipeRepository()).GetRecipes)
-	api.GET("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).GetRecipe)
-	api.POST("/recipe", controllers.NewRecipeController(repository.NewRecipeRepository()).CreateRecipe)
-	api.PATCH("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).UpdateRecipe)
-	api.DELETE("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).DeleteRecipe)
-	api.GET("/recipe/saves", controllers.NewRecipeController(repository.NewRecipeRepository()).ArchiveRecipeIndex)
-	api.POST("/recipe/save/:id", controllers.NewRecipeController(repository.NewRecipeRepository()).ArchiveRecipe)
+	api.GET("/recipes", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).GetRecipes)
+	api.GET("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).GetRecipe)
+	api.POST("/recipe", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).CreateRecipe)
+	api.PATCH("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).UpdateRecipe)
+	api.DELETE("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).DeleteRecipe)
+	api.GET("/recipe/saves", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).SavedRecipeIndex)
+	api.POST("/recipe/save/:id", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).SavedRecipe)
 
 	// likes
-	api.GET("/likes/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).GetLikesByRecipe)
-	api.POST("/like/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).LikeByRecipe)
-	api.POST("/unlike/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository()).UnlikeByRecipe)
+	api.GET("/likes/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository(repository.NewNotificationRepository())).GetLikesByRecipe)
+	api.POST("/like/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository(repository.NewNotificationRepository())).LikeByRecipe)
+	api.POST("/unlike/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository(repository.NewNotificationRepository())).UnlikeByRecipe)
 
 	// comments
-	api.GET("/comments/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository()).GetCommentsByRecipe)
-	api.POST("/comment/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository()).CommentByRecipe)
-	api.DELETE("/comment/:id", controllers.NewCommentController(repository.NewCommentRepository()).DeleteComment)
+	api.GET("/comments/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository(repository.NewNotificationRepository())).GetCommentsByRecipe)
+	api.POST("/comment/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository(repository.NewNotificationRepository())).CommentByRecipe)
+	api.DELETE("/comment/:id", controllers.NewCommentController(repository.NewCommentRepository(repository.NewNotificationRepository())).DeleteComment)
+
+	// notifications
+	api.GET("/notifications", controllers.NewNotificationController(repository.NewNotificationRepository()).GetNotifications)
 }

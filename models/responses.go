@@ -11,26 +11,26 @@ type NoteResponse struct {
 }
 
 type UserDetailResponse struct {
-	ID      uint   `json:"id"`
+	ID      string `json:"id"`
 	Name    string `json:"name"`
 	Email   string `json:"email"`
 	Address string `json:"address"`
 }
 
 type UserResponse struct {
-	ID    uint   `json:"id"`
+	ID    string `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
 
 type UserEmbeddedResponse struct {
-	ID    uint   `json:"id"`
+	ID    string `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
 
 type RecipeResponse struct {
-	ID            uint                 `json:"id"`
+	ID            string               `json:"id"`
 	Title         string               `json:"title"`
 	Content       string               `json:"content"`
 	LikesCount    int64                `json:"likes_count" gorm:"column:likes_count"`
@@ -43,16 +43,16 @@ type RecipeResponse struct {
 }
 
 type LikeResponse struct {
-	ID        uint         `json:"id"`
-	RecipeID  uint         `json:"recipe_id"`
+	ID        string       `json:"id"`
+	RecipeID  string       `json:"recipe_id"`
 	CreatedAt time.Time    `json:"created_at"`
 	UpdatedAt time.Time    `json:"updated_at"`
 	User      UserResponse `json:"user"`
 }
 
 type CommentResponse struct {
-	ID        uint         `json:"id"`
-	RecipeID  uint         `json:"recipe_id"`
+	ID        string       `json:"id"`
+	RecipeID  string       `json:"recipe_id"`
 	Content   string       `json:"content"`
 	IsMine    bool         `json:"is_mine" gorm:"-"`
 	CreatedAt time.Time    `json:"created_at"`

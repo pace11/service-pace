@@ -1,10 +1,8 @@
 package controllers
 
 import (
-	"net/http"
 	"service-pace11/repository"
 	"service-pace11/utils"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,13 +28,8 @@ func NewLikeController(repo repository.LikeRepository) *LikeController {
 // @Router /likes/recipe/{id} [get]
 func (ctl *LikeController) GetLikesByRecipe(c *gin.Context) {
 	idRecipe := c.Param("id")
-	id, err := strconv.Atoi(idRecipe)
 
-	if err != nil {
-		utils.HttpResponse(c, nil, http.StatusBadRequest, "Invalid ID", c.Request.Method, nil)
-	}
-
-	data, code, entity, total, page, limit := ctl.Repo.Show(c, uint(id))
+	data, code, entity, total, page, limit := ctl.Repo.Show(c, idRecipe)
 	utils.PaginatedResponse(c, data, code, entity, c.Request.Method, total, page, limit)
 }
 
@@ -46,18 +39,14 @@ func (ctl *LikeController) GetLikesByRecipe(c *gin.Context) {
 // @Tags Likes
 // @Accept json
 // @Produce json
+// @Param id path string true "Recipe ID (UUID)" format(uuid)
 // @Success 201 {object} utils.StandardResponses
 // @Security BearerAuth
 // @Router /like/recipe/{id} [post]
 func (ctl *LikeController) LikeByRecipe(c *gin.Context) {
 	idRecipe := c.Param("id")
-	id, err := strconv.Atoi(idRecipe)
 
-	if err != nil {
-		utils.HttpResponse(c, nil, http.StatusBadRequest, "Invalid ID", c.Request.Method, nil)
-	}
-
-	data, code, entity, errors := ctl.Repo.Save(c, uint(id))
+	data, code, entity, errors := ctl.Repo.Save(c, idRecipe)
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }
 
@@ -67,17 +56,13 @@ func (ctl *LikeController) LikeByRecipe(c *gin.Context) {
 // @Tags Likes
 // @Accept json
 // @Produce json
+// @Param id path string true "Recipe ID (UUID)" format(uuid)
 // @Success 200 {object} utils.StandardResponses
 // @Security BearerAuth
 // @Router /unlike/recipe/{id} [post]
 func (ctl *LikeController) UnlikeByRecipe(c *gin.Context) {
 	idRecipe := c.Param("id")
-	id, err := strconv.Atoi(idRecipe)
 
-	if err != nil {
-		utils.HttpResponse(c, nil, http.StatusBadRequest, "Invalid ID", c.Request.Method, nil)
-	}
-
-	data, code, entity, errors := ctl.Repo.Delete(c, uint(id))
+	data, code, entity, errors := ctl.Repo.Delete(c, idRecipe)
 	utils.HttpResponse(c, data, code, entity, c.Request.Method, errors)
 }

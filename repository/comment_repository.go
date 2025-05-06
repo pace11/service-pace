@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"net/http"
 	"service-pace11/config"
 	"service-pace11/models"
@@ -10,18 +11,22 @@ import (
 )
 
 type CommentRepository interface {
-	Show(c *gin.Context, id uint) ([]models.CommentResponse, int, any, int64, int, int)
-	Save(c *gin.Context, id uint, comment *models.CommentDTO) (any, int, string, map[string]string)
-	Delete(id uint) (any, int, string, map[string]string)
+	Show(c *gin.Context, id string) ([]models.CommentResponse, int, any, int64, int, int)
+	Save(c *gin.Context, id string, comment *models.CommentDTO) (any, int, string, map[string]string)
+	Delete(id string) (any, int, string, map[string]string)
 }
 
-type commentRepo struct{}
-
-func NewCommentRepository() CommentRepository {
-	return &commentRepo{}
+type commentRepo struct {
+	notificationRepo NotificationRepository
 }
 
-func (r *commentRepo) Show(c *gin.Context, id uint) ([]models.CommentResponse, int, any, int64, int, int) {
+func NewCommentRepository(notificationRepo NotificationRepository) CommentRepository {
+	return &commentRepo{
+		notificationRepo: notificationRepo,
+	}
+}
+
+func (r *commentRepo) Show(c *gin.Context, id string) ([]models.CommentResponse, int, any, int64, int, int) {
 	userIDVal, exist := c.Get("user_id")
 	var comments []models.Comment
 	var total int64
@@ -30,7 +35,7 @@ func (r *commentRepo) Show(c *gin.Context, id uint) ([]models.CommentResponse, i
 		return nil, http.StatusUnauthorized, "access", 0, 0, 0
 	}
 
-	userID, ok := userIDVal.(uint)
+	userID, ok := userIDVal.(string)
 	if !ok {
 		return nil, http.StatusInternalServerError, "invalid user_id", 0, 0, 0
 	}
@@ -61,14 +66,14 @@ func (r *commentRepo) Show(c *gin.Context, id uint) ([]models.CommentResponse, i
 	return response, http.StatusOK, "comment", total, page, limit
 }
 
-func (r *commentRepo) Save(c *gin.Context, id uint, comment *models.CommentDTO) (any, int, string, map[string]string) {
+func (r *commentRepo) Save(c *gin.Context, id string, comment *models.CommentDTO) (any, int, string, map[string]string) {
 	var existing models.Recipe
 	userIDVal, exist := c.Get("user_id")
 	if !exist {
 		return nil, http.StatusUnauthorized, "access", nil
 	}
 
-	userID, ok := userIDVal.(uint)
+	userID, ok := userIDVal.(string)
 	if !ok {
 		return nil, http.StatusInternalServerError, "invalid user_id", nil
 	}
@@ -87,10 +92,15 @@ func (r *commentRepo) Save(c *gin.Context, id uint, comment *models.CommentDTO) 
 		return nil, http.StatusInternalServerError, "comment", nil
 	}
 
+	created := r.notificationRepo.Save(c, existing.UserID, userID, string(models.CommentType), existing.Title)
+	if !created {
+		fmt.Print("Notification not created")
+	}
+
 	return nil, http.StatusCreated, "comment", nil
 }
 
-func (r *commentRepo) Delete(id uint) (any, int, string, map[string]string) {
+func (r *commentRepo) Delete(id string) (any, int, string, map[string]string) {
 	var existing models.Comment
 
 	if err := config.DB.First(&existing, id).Error; err != nil {

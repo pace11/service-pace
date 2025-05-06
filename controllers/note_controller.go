@@ -37,7 +37,7 @@ func (ctl *NoteController) GetNotes(c *gin.Context) {
 	utils.PaginatedResponse(c, data, code, entity, c.Request.Method, total, page, limit)
 }
 
-// GetNote
+// GetNoteByID
 // @Summary Get a single note by ID
 // @Description Get detail of a note by ID
 // @Tags Notes

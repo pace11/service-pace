@@ -7,8 +7,8 @@ import (
 )
 
 type Recipe struct {
-	ID        uint           `json:"id" gorm:"primaryKey"`
-	UserID    uint           `json:"user_id"`
+	UUIDModel
+	UserID    string         `json:"user_id" gorm:"type:char(36)"`
 	Title     string         `json:"title" gorm:"size:255;not null"`
 	Content   string         `json:"content" gorm:"type:text;not null"`
 	CreatedAt time.Time      `json:"created_at"`

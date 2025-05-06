@@ -7,8 +7,8 @@ import (
 )
 
 type RecipeTable struct {
-	ID            uint           `json:"id" gorm:"primaryKey"`
-	UserID        uint           `json:"user_id"`
+	UUIDModel
+	UserID        string         `json:"user_id" gorm:"type:char(36)"`
 	Title         string         `json:"title" gorm:"size:255;not null"`
 	Content       string         `json:"content" gorm:"type:text;not null"`
 	LikesCount    int64          `json:"likes_count" gorm:"column:likes_count"`

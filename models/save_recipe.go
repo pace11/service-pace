@@ -3,9 +3,9 @@ package models
 import "time"
 
 type SavedRecipe struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
-	UserID    uint      `json:"user_id"`
-	RecipeID  uint      `json:"recipe_id"`
+	UUIDModel
+	UserID    string    `json:"user_id" gorm:"type:char(36)"`
+	RecipeID  string    `json:"recipe_id" gorm:"type:char(36)"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 

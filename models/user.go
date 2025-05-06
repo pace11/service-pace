@@ -3,7 +3,7 @@ package models
 import "time"
 
 type User struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
+	UUIDModel
 	Name      string    `json:"name" gorm:"size:100;not null"`
 	Address   *string   `json:"address"`
 	Email     string    `json:"email" gorm:"size:100;unique;not null"`
