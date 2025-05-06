@@ -17,10 +17,8 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            ls -la
-            cd pace-app/
-            sudo docker ps
-            cd service-go/
+            cd pace-app/service-go/
             sudo git pull origin master
             cd ..
             sudo docker compose up -d --build service-go
+            sudo docker ps
