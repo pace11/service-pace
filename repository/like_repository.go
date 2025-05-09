@@ -109,7 +109,7 @@ func (r *likeRepo) Delete(c *gin.Context, id string) (any, int, string, map[stri
 		return nil, http.StatusNotFound, "like", nil
 	}
 
-	result := config.DB.Delete(&models.Like{}, existing.ID)
+	result := config.DB.Where("id = ?", existing.ID).Delete(&models.Like{})
 
 	if result.Error != nil {
 		return nil, http.StatusInternalServerError, "like", nil

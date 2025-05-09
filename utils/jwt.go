@@ -6,8 +6,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var secretKey = []byte("your-secret-key")
-
 func GenerateToken(userID string, email string, name string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
@@ -18,7 +16,7 @@ func GenerateToken(userID string, email string, name string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(secretKey)
+	return token.SignedString(getSecretKey())
 }
 
 func ParseToken(tokenStr string) (*jwt.Token, jwt.MapClaims, error) {
@@ -26,7 +24,7 @@ func ParseToken(tokenStr string) (*jwt.Token, jwt.MapClaims, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
 		}
-		return secretKey, nil
+		return getSecretKey(), nil
 	})
 
 	if err != nil {
