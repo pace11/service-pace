@@ -36,6 +36,7 @@ type RecipeResponse struct {
 	LikesCount    int64                `json:"likes_count" gorm:"column:likes_count"`
 	CommentsCount int64                `json:"comments_count" gorm:"column:comments_count"`
 	IsLikeByMe    bool                 `json:"is_liked_by_me" gorm:"column:is_liked_by_me"`
+	IsSaveByMe    bool                 `json:"is_saved_by_me" gorm:"column:is_saved_by_me"`
 	IsMine        bool                 `json:"is_mine" gorm:"-"`
 	CreatedAt     time.Time            `json:"created_at"`
 	UpdatedAt     time.Time            `json:"updated_at"`

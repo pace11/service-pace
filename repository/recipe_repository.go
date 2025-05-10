@@ -56,6 +56,11 @@ func (r *recipeRepo) Index(c *gin.Context, filters map[string]any) ([]models.Rec
 		Select("recipe_id, true as is_liked_by_me").
 		Where("user_id = ?", userIdRaw)
 
+	savedByMeSubquery := config.DB.
+		Table("save_recipes").
+		Select("recipe_id, true as is_saved_by_me").
+		Where("user_id = ?", userIdRaw)
+
 	query := config.DB.Model(&models.RecipeTable{}).
 		Select(`
 			recipes.*,
@@ -64,12 +69,14 @@ func (r *recipeRepo) Index(c *gin.Context, filters map[string]any) ([]models.Rec
 			users.email as user__email,
 			IFNULL(likes_subquery.likes_count, 0) as likes_count,
 			IFNULL(comments_subquery.comments_count, 0) as comments_count,
-			IFNULL(liked_by_me_subquery.is_liked_by_me, false) as is_liked_by_me
+			IFNULL(liked_by_me_subquery.is_liked_by_me, false) as is_liked_by_me,
+			IFNULL(saved_by_me_subquery.is_saved_by_me, false) as is_saved_by_me
 		`).
 		Joins("LEFT JOIN users ON users.id = recipes.user_id").
 		Joins("LEFT JOIN (?) as likes_subquery ON recipes.id = likes_subquery.recipe_id", likesSubquery).
 		Joins("LEFT JOIN (?) as comments_subquery ON recipes.id = comments_subquery.recipe_id", commentsSubQuery).
 		Joins("LEFT JOIN (?) as liked_by_me_subquery ON recipes.id = liked_by_me_subquery.recipe_id", likedByMeSubquery).
+		Joins("LEFT JOIN (?) as saved_by_me_subquery ON recipes.id = saved_by_me_subquery.recipe_id", savedByMeSubquery).
 		Order("created_at DESC")
 
 	query = utils.FilterByParams(query, filters)
@@ -87,6 +94,7 @@ func (r *recipeRepo) Index(c *gin.Context, filters map[string]any) ([]models.Rec
 			LikesCount:    r.LikesCount,
 			CommentsCount: r.CommentsCount,
 			IsLikeByMe:    r.IsLikeByMe,
+			IsSaveByMe:    r.IsSaveByMe,
 			IsMine:        r.UserID == userIdRaw,
 			CreatedAt:     r.CreatedAt,
 			UpdatedAt:     r.UpdatedAt,
@@ -124,6 +132,11 @@ func (r *recipeRepo) Show(c *gin.Context, id string) (*models.RecipeResponse, in
 		Select("recipe_id, true as is_liked_by_me").
 		Where("user_id = ?", userIdRaw)
 
+	savedByMeSubquery := config.DB.
+		Table("save_recipes").
+		Select("recipe_id, true as is_saved_by_me").
+		Where("user_id = ?", userIdRaw)
+
 	query := config.DB.Model(&models.Recipe{}).
 		Select(`
 			recipes.*,
@@ -132,12 +145,14 @@ func (r *recipeRepo) Show(c *gin.Context, id string) (*models.RecipeResponse, in
 			users.email as user__email,
 			IFNULL(likes_subquery.likes_count, 0) as likes_count,
 			IFNULL(comments_subquery.comments_count, 0) as comments_count,
-			IFNULL(liked_by_me_subquery.is_liked_by_me, false) as is_liked_by_me
+			IFNULL(liked_by_me_subquery.is_liked_by_me, false) as is_liked_by_me,
+			IFNULL(saved_by_me_subquery.is_saved_by_me, false) as is_saved_by_me
 		`).
 		Joins("LEFT JOIN users ON users.id = recipes.user_id").
 		Joins("LEFT JOIN (?) as likes_subquery ON recipes.id = likes_subquery.recipe_id", likesSubquery).
 		Joins("LEFT JOIN (?) as comments_subquery ON recipes.id = comments_subquery.recipe_id", commentsSubQuery).
 		Joins("LEFT JOIN (?) as liked_by_me_subquery ON recipes.id = liked_by_me_subquery.recipe_id", likedByMeSubquery).
+		Joins("LEFT JOIN (?) as saved_by_me_subquery ON recipes.id = saved_by_me_subquery.recipe_id", savedByMeSubquery).
 		Where("recipes.id = ?", id)
 
 	if err := query.Scan(&recipe).Error; err != nil {
@@ -151,6 +166,7 @@ func (r *recipeRepo) Show(c *gin.Context, id string) (*models.RecipeResponse, in
 		LikesCount:    recipe.LikesCount,
 		CommentsCount: recipe.CommentsCount,
 		IsLikeByMe:    recipe.IsLikeByMe,
+		IsSaveByMe:    recipe.IsSaveByMe,
 		IsMine:        recipe.UserID == userIdRaw,
 		User: models.UserEmbeddedResponse{
 			ID:    recipe.User.ID,
@@ -234,7 +250,7 @@ func (r *recipeRepo) SavedIndex(c *gin.Context) ([]models.SavedRecipe, int, any,
 		return nil, http.StatusUnauthorized, "access", 0, 0, 0
 	}
 
-	query := config.DB.Model(&models.SavedRecipe{}).Where("user_id = ?", userIdRaw).Preload("User").Preload("Recipe").Order("created_at DESC")
+	query := config.DB.Model(&models.SavedRecipe{}).Where("user_id = ?", userIdRaw).Preload("User").Preload("Recipe.User").Order("created_at DESC")
 	query.Count(&total)
 
 	paginatedQuery, page, limit := utils.ApplyPagination(c, query)
@@ -274,7 +290,12 @@ func (r *recipeRepo) Saved(c *gin.Context, id string) (any, int, string, map[str
 
 	err := config.DB.Where("user_id = ? AND recipe_id = ?", userIdRaw, id).First(&saveRecipe).Error
 	if err == nil {
-		return nil, http.StatusBadRequest, "you have saved this recipe", nil
+		result := config.DB.Where("id = ?", saveRecipe.ID).Delete(&models.SavedRecipe{})
+		if result.Error != nil {
+			return nil, http.StatusInternalServerError, "save recipe", nil
+		}
+
+		return nil, http.StatusOK, "unsaved recipe", nil
 	}
 
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
