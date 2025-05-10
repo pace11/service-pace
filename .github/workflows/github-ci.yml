@@ -18,6 +18,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd pace-app/service-go/
+            echo "${{ secrets.ENV_PROD }}" | sudo tee .env > /dev/null
             sudo git pull origin master
             cd ..
             sudo docker compose up -d --build service-go
