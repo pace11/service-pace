@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "fc022061-067c-4d98-9ded-606362b81d9f",
 		"name": "Service Pace",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "3638594"
 	},
 	"item": [
@@ -19,14 +19,23 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"umar@mail.com\",\n    \"password\": \"umar\"\n}",
+									"raw": "{\n    \"email\": \"pace@mail.com\",\n    \"password\": \"pace\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": "{{BASE_URL}}/auth/login"
+								"url": {
+									"raw": "{{BASE_URL}}/auth/login",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
 							},
 							"response": []
 						},
@@ -37,14 +46,23 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Umar Kotak\",\n    \"email\": \"umar@mail.com\",\n    \"password\": \"umar\"\n}",
+									"raw": "{\n    \"name\": \"Pace\",\n    \"email\": \"pace@mail.com\",\n    \"password\": \"pace\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": "{{BASE_URL}}/auth/register"
+								"url": {
+									"raw": "{{BASE_URL}}/auth/register",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
 							},
 							"response": []
 						}
@@ -55,28 +73,29 @@
 					"item": [
 						{
 							"name": "/user/me",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJlaGFuQG1haWwuY29tIiwiZXhwIjoxNzQ2NDU1MDQwLCJpYXQiOjE3NDYzNjg2NDAsIm5hbWUiOiJSZWhhbiBGaXJkYXVzIiwidXNlcl9pZCI6Mn0.C8nbCHr1vLwWTPI57wi3MOISHgP2cxK4Bu8vIF8BeAM"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDY2NDA1MTgsImlhdCI6MTc0NjU1NDExOCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6ImE3ZGNjN2ZiLTRkM2ItNDE1Yy05MTAwLWQ3NWJkYzgxNTFmOSJ9.7xhsqUx_Xt7bydxdw0fAvY1fcnKu5f5z78BF_f3A8Vg",
+											"type": "string"
+										}
+									]
 								},
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"name\": \"Umar Kotak\",\n    \"email\": \"umar@mail.com\",\n    \"password\": \"umar\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{BASE_URL}}/user/me"
+								"url": {
+									"raw": "{{BASE_URL}}/user/me",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"user",
+										"me"
+									]
+								}
 							},
 							"response": []
 						},
@@ -85,22 +104,35 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVtYXJAbWFpbC5jb20iLCJleHAiOjE3NDY0NTgyNDIsImlhdCI6MTc0NjM3MTg0MiwibmFtZSI6IlVtYXIgS290YWsiLCJ1c2VyX2lkIjo4fQ.1rQQkQPghh5JtR7oiAOesp6BfQO8cFLs4skbJYE9vYs"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVtYXJAbWFpbC5jb20iLCJleHAiOjE3NDY0NTgyNDIsImlhdCI6MTc0NjM3MTg0MiwibmFtZSI6IlVtYXIgS290YWsiLCJ1c2VyX2lkIjo4fQ.1rQQkQPghh5JtR7oiAOesp6BfQO8cFLs4skbJYE9vYs",
+											"type": "string"
+										}
+									]
 								},
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Umar Kotak Gege\",\n    \"email\": \"umar@mail.com\",\n    \"address\": \"Jl. menuju surga\",\n    \"password\": \"\"\n}",
+									"raw": "{\n    \"name\": \"Pace Iriansyah\",\n    \"email\": \"pace@mail.com\",\n    \"address\": \"Jl. menuju surga\",\n    \"password\": \"\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": "{{BASE_URL}}/user/update"
+								"url": {
+									"raw": "{{BASE_URL}}/user/update",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"user",
+										"update"
+									]
+								}
 							},
 							"response": []
 						}
@@ -114,14 +146,18 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyMjczODksImlhdCI6MTc0NjE0MDk4OSwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.E8mDaE4XwSZUHaYhdRqdgC-hwmwutP4kDSrI5I_YGvE"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVtYXJAbWFpbC5jb20iLCJleHAiOjE3NDY4ODk4ODQsImlhdCI6MTc0NjgwMzQ4NCwibmFtZSI6IlVtYXIgS290YWsiLCJ1c2VyX2lkIjoiOTk2NjlhOGItOWVjYy00OWZkLThhYmEtMGE0ZjRhZmMzY2Q3In0.-wal9c6dGpL-OonohxnVu1dMgGJ0lBWKMgi2yo6YGwg",
+											"type": "string"
+										}
+									]
 								},
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/recipes?page=1",
+									"raw": "{{BASE_URL}}/recipes",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -131,13 +167,47 @@
 									"query": [
 										{
 											"key": "page",
-											"value": "1"
+											"value": "1",
+											"disabled": true
 										},
 										{
 											"key": "title",
 											"value": "nasi",
 											"disabled": true
+										},
+										{
+											"key": "type",
+											"value": "me",
+											"disabled": true
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipe/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDY2NDA1MTgsImlhdCI6MTc0NjU1NDExOCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6ImE3ZGNjN2ZiLTRkM2ItNDE1Yy05MTAwLWQ3NWJkYzgxNTFmOSJ9.7xhsqUx_Xt7bydxdw0fAvY1fcnKu5f5z78BF_f3A8Vg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/recipe/f5268204-eb13-4f84-956a-234d14b1a021",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"recipe",
+										"f5268204-eb13-4f84-956a-234d14b1a021"
 									]
 								}
 							},
@@ -148,9 +218,13 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJlaGFuQG1haWwuY29tIiwiZXhwIjoxNzQ2MjkyNDQxLCJpYXQiOjE3NDYyMDYwNDEsIm5hbWUiOiJSZWhhbiBGaXJkYXVzIiwidXNlcl9pZCI6Mn0.e9E7pwpbU5n5-M1Obqs25KFjHyFFLatPuGQ_v_OIij0"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVtYXJAbWFpbC5jb20iLCJleHAiOjE3NDY4ODk4ODQsImlhdCI6MTc0NjgwMzQ4NCwibmFtZSI6IlVtYXIgS290YWsiLCJ1c2VyX2lkIjoiOTk2NjlhOGItOWVjYy00OWZkLThhYmEtMGE0ZjRhZmMzY2Q3In0.-wal9c6dGpL-OonohxnVu1dMgGJ0lBWKMgi2yo6YGwg",
+											"type": "string"
+										}
+									]
 								},
 								"method": "GET",
 								"header": [],
@@ -165,10 +239,80 @@
 									],
 									"query": [
 										{
-											"key": "title",
-											"value": "nasi",
+											"key": "page",
+											"value": "3",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "1",
 											"disabled": true
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipe",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVtYXJAbWFpbC5jb20iLCJleHAiOjE3NDY2NDMyNTgsImlhdCI6MTc0NjU1Njg1OCwibmFtZSI6IlVtYXIgS290YWsiLCJ1c2VyX2lkIjoiOTk2NjlhOGItOWVjYy00OWZkLThhYmEtMGE0ZjRhZmMzY2Q3In0.lgXNrUKb2U2NbqezSmWoJ7uJplAOrelnsUDoOrhJkCg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Nasi Goreng Solaria\",\n    \"content\": \"adalah makan yang cukup enak dan lezat\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/recipe",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"recipe"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipe/save/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVtYXJAbWFpbC5jb20iLCJleHAiOjE3NDY4ODk4ODQsImlhdCI6MTc0NjgwMzQ4NCwibmFtZSI6IlVtYXIgS290YWsiLCJ1c2VyX2lkIjoiOTk2NjlhOGItOWVjYy00OWZkLThhYmEtMGE0ZjRhZmMzY2Q3In0.-wal9c6dGpL-OonohxnVu1dMgGJ0lBWKMgi2yo6YGwg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/recipe/save/3013e7ec-c4f2-4032-bcc0-118b097dbb96",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"recipe",
+										"save",
+										"3013e7ec-c4f2-4032-bcc0-118b097dbb96"
 									]
 								}
 							},
@@ -179,85 +323,35 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYwMTkxNTQsImlhdCI6MTc0NTkzMjc1NCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.o4ped6EdqJHz_jvMu6hgywd3rnrZjh5udBzOp4UDLk8"
-									}
-								},
-								"method": "GET",
-								"header": [],
-								"url": "{{BASE_URL}}/recipe/1"
-							},
-							"response": []
-						},
-						{
-							"name": "/recipe",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYwMTkxNTQsImlhdCI6MTc0NTkzMjc1NCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.o4ped6EdqJHz_jvMu6hgywd3rnrZjh5udBzOp4UDLk8"
-									}
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"content\": \"test test baru\",\n    \"title\": \"title untuk test baru\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDY2NDMwMjAsImlhdCI6MTc0NjU1NjYyMCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6ImE3ZGNjN2ZiLTRkM2ItNDE1Yy05MTAwLWQ3NWJkYzgxNTFmOSJ9.5STeyKrb9a8e5pFBZTbTjLg2MPUEHcfYkWU0jCFPs_U",
+											"type": "string"
 										}
-									}
-								},
-								"url": "{{BASE_URL}}/recipe"
-							},
-							"response": []
-						},
-						{
-							"name": "/recipe/save/:id",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyOTA5OTMsImlhdCI6MTc0NjIwNDU5MywibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0._xsNzSnz6vXhw4pZHTEMUXRzOWUZIMRRVLqUjiuAIe8"
-									}
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{BASE_URL}}/recipe/save/1"
-							},
-							"response": []
-						},
-						{
-							"name": "/recipe/:id",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYwMTkxNTQsImlhdCI6MTc0NTkzMjc1NCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.o4ped6EdqJHz_jvMu6hgywd3rnrZjh5udBzOp4UDLk8"
-									}
+									]
 								},
 								"method": "PATCH",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"content\": \"test test baru\",\n    \"title\": \"title baru [update]\"\n}",
+									"raw": "{\n    \"title\": \"Papeda Ikan Kuah Kuning\",\n    \"content\": \"adalah makan yang cukup enak dan lezat\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
-								"url": "{{BASE_URL}}/recipe/3"
+								"url": {
+									"raw": "{{BASE_URL}}/recipe/f5268204-eb13-4f84-956a-234d14b1a021",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"recipe",
+										"f5268204-eb13-4f84-956a-234d14b1a021"
+									]
+								}
 							},
 							"response": []
 						},
@@ -266,22 +360,26 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYwMTkxNTQsImlhdCI6MTc0NTkzMjc1NCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.o4ped6EdqJHz_jvMu6hgywd3rnrZjh5udBzOp4UDLk8"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYwMTkxNTQsImlhdCI6MTc0NTkzMjc1NCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.o4ped6EdqJHz_jvMu6hgywd3rnrZjh5udBzOp4UDLk8",
+											"type": "string"
+										}
+									]
 								},
 								"method": "DELETE",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"content\": \"test test baru\",\n    \"title\": \"title untuk test baru [update]\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{BASE_URL}}/recipe/3"
+								"url": {
+									"raw": "{{BASE_URL}}/recipe/3",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"recipe",
+										"3"
+									]
+								}
 							},
 							"response": []
 						}
@@ -291,17 +389,31 @@
 					"name": "Likes",
 					"item": [
 						{
-							"name": "/like/recipe/:id",
+							"name": "/likes/recipe/:id",
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYxMDY1OTcsImlhdCI6MTc0NjAyMDE5NywibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.ASZ94lOMnXLAAWY9YhSeIk0wFqREcBz-QPthLydkSZc"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDY2NDMwMjAsImlhdCI6MTc0NjU1NjYyMCwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6ImE3ZGNjN2ZiLTRkM2ItNDE1Yy05MTAwLWQ3NWJkYzgxNTFmOSJ9.5STeyKrb9a8e5pFBZTbTjLg2MPUEHcfYkWU0jCFPs_U",
+											"type": "string"
+										}
+									]
 								},
 								"method": "GET",
 								"header": [],
-								"url": "{{BASE_URL}}/like/recipe/3"
+								"url": {
+									"raw": "{{BASE_URL}}/likes/recipe/94c4d7f8-4764-482e-9985-2e650adc046d",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"likes",
+										"recipe",
+										"94c4d7f8-4764-482e-9985-2e650adc046d"
+									]
+								}
 							},
 							"response": []
 						},
@@ -310,13 +422,27 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYxMDY1OTcsImlhdCI6MTc0NjAyMDE5NywibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.ASZ94lOMnXLAAWY9YhSeIk0wFqREcBz-QPthLydkSZc"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVtYXJAbWFpbC5jb20iLCJleHAiOjE3NDY2NDMyNTgsImlhdCI6MTc0NjU1Njg1OCwibmFtZSI6IlVtYXIgS290YWsiLCJ1c2VyX2lkIjoiOTk2NjlhOGItOWVjYy00OWZkLThhYmEtMGE0ZjRhZmMzY2Q3In0.lgXNrUKb2U2NbqezSmWoJ7uJplAOrelnsUDoOrhJkCg",
+											"type": "string"
+										}
+									]
 								},
 								"method": "POST",
 								"header": [],
-								"url": "{{BASE_URL}}/like/recipe/3"
+								"url": {
+									"raw": "{{BASE_URL}}/like/recipe/f5268204-eb13-4f84-956a-234d14b1a021",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"like",
+										"recipe",
+										"f5268204-eb13-4f84-956a-234d14b1a021"
+									]
+								}
 							},
 							"response": []
 						},
@@ -325,13 +451,59 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYxMDY1OTcsImlhdCI6MTc0NjAyMDE5NywibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.ASZ94lOMnXLAAWY9YhSeIk0wFqREcBz-QPthLydkSZc"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYxMDY1OTcsImlhdCI6MTc0NjAyMDE5NywibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.ASZ94lOMnXLAAWY9YhSeIk0wFqREcBz-QPthLydkSZc",
+											"type": "string"
+										}
+									]
 								},
 								"method": "POST",
 								"header": [],
-								"url": "{{BASE_URL}}/unlike/recipe/2"
+								"url": {
+									"raw": "{{BASE_URL}}/unlike/recipe/2",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"unlike",
+										"recipe",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Notifications",
+					"item": [
+						{
+							"name": "/notifications",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDcwNTYxNzMsImlhdCI6MTc0Njk2OTc3MywibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6ImE3ZGNjN2ZiLTRkM2ItNDE1Yy05MTAwLWQ3NWJkYzgxNTFmOSJ9.ucOheRTtLpvC3yNz0AAgDACLHcoSBOmxHUYXtWrjsMI",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/notifications",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"notifications"
+									]
+								}
 							},
 							"response": []
 						}
@@ -345,13 +517,27 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyMjczODksImlhdCI6MTc0NjE0MDk4OSwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.E8mDaE4XwSZUHaYhdRqdgC-hwmwutP4kDSrI5I_YGvE"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVtYXJAbWFpbC5jb20iLCJleHAiOjE3NDY4NTEzNzcsImlhdCI6MTc0Njc2NDk3NywibmFtZSI6IlVtYXIgS290YWsiLCJ1c2VyX2lkIjoiOTk2NjlhOGItOWVjYy00OWZkLThhYmEtMGE0ZjRhZmMzY2Q3In0.irotUbnztKMkpIHPKMc6_xv_Q0Wcjgnv8_s60swq4xg",
+											"type": "string"
+										}
+									]
 								},
 								"method": "GET",
 								"header": [],
-								"url": "{{BASE_URL}}/comments/recipe/1"
+								"url": {
+									"raw": "{{BASE_URL}}/comments/recipe/3013e7ec-c4f2-4032-bcc0-118b097dbb96",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"comments",
+										"recipe",
+										"3013e7ec-c4f2-4032-bcc0-118b097dbb96"
+									]
+								}
 							},
 							"response": []
 						},
@@ -360,9 +546,13 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyMjczODksImlhdCI6MTc0NjE0MDk4OSwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.E8mDaE4XwSZUHaYhdRqdgC-hwmwutP4kDSrI5I_YGvE"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVtYXJAbWFpbC5jb20iLCJleHAiOjE3NDY4NTEzNzcsImlhdCI6MTc0Njc2NDk3NywibmFtZSI6IlVtYXIgS290YWsiLCJ1c2VyX2lkIjoiOTk2NjlhOGItOWVjYy00OWZkLThhYmEtMGE0ZjRhZmMzY2Q3In0.irotUbnztKMkpIHPKMc6_xv_Q0Wcjgnv8_s60swq4xg",
+											"type": "string"
+										}
+									]
 								},
 								"method": "POST",
 								"header": [],
@@ -375,7 +565,17 @@
 										}
 									}
 								},
-								"url": "{{BASE_URL}}/comment/recipe/1"
+								"url": {
+									"raw": "{{BASE_URL}}/comment/recipe/3013e7ec-c4f2-4032-bcc0-118b097dbb96",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"comment",
+										"recipe",
+										"3013e7ec-c4f2-4032-bcc0-118b097dbb96"
+									]
+								}
 							},
 							"response": []
 						},
@@ -384,13 +584,26 @@
 							"request": {
 								"auth": {
 									"type": "bearer",
-									"bearer": {
-										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyMjczODksImlhdCI6MTc0NjE0MDk4OSwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.E8mDaE4XwSZUHaYhdRqdgC-hwmwutP4kDSrI5I_YGvE"
-									}
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhY2VAbWFpbC5jb20iLCJleHAiOjE3NDYyMjczODksImlhdCI6MTc0NjE0MDk4OSwibmFtZSI6IlBhY2UgSXJpYW5zeWFoIiwidXNlcl9pZCI6MX0.E8mDaE4XwSZUHaYhdRqdgC-hwmwutP4kDSrI5I_YGvE",
+											"type": "string"
+										}
+									]
 								},
 								"method": "DELETE",
 								"header": [],
-								"url": "{{BASE_URL}}/comment/2"
+								"url": {
+									"raw": "{{BASE_URL}}/comment/2",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"comment",
+										"2"
+									]
+								}
 							},
 							"response": []
 						}
