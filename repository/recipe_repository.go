@@ -228,7 +228,7 @@ func (r *recipeRepo) Update(c *gin.Context, id string, recipe *models.RecipeDTO)
 }
 
 func (r *recipeRepo) Delete(id string) (any, int, string, map[string]string) {
-	result := config.DB.Delete(&models.Recipe{}, id)
+	result := config.DB.Where("id = ?", id).Delete(&models.Recipe{})
 
 	if result.Error != nil {
 		return nil, http.StatusInternalServerError, "recipe", nil
@@ -237,6 +237,8 @@ func (r *recipeRepo) Delete(id string) (any, int, string, map[string]string) {
 	if result.RowsAffected == 0 {
 		return nil, http.StatusNotFound, "recipe", nil
 	}
+
+	config.DB.Where("recipe_id = ?", id).Delete(&models.SavedRecipe{})
 
 	return nil, http.StatusOK, "recipe", nil
 }
