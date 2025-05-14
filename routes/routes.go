@@ -1,53 +1,52 @@
 package routes
 
 import (
-	"service-pace11/controllers"
 	"service-pace11/middlewares"
-	"service-pace11/repository"
+	"service-pace11/wire"
 
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRoutes(r *gin.Engine) {
+func SetupRoutes(r *gin.Engine, app *wire.App) {
 	api := r.Group("/api")
 	// notes
-	api.GET("/notes", controllers.NewNoteController(repository.NewNoteRepository()).GetNotes)
-	api.GET("/note/:id", controllers.NewNoteController(repository.NewNoteRepository()).GetNote)
-	api.POST("/note", controllers.NewNoteController(repository.NewNoteRepository()).CreateNote)
-	api.PATCH("/note/:id", controllers.NewNoteController(repository.NewNoteRepository()).UpdateNote)
-	api.DELETE("/note/:id", controllers.NewNoteController(repository.NewNoteRepository()).DeleteNote)
+	api.GET("/notes", app.NoteController.GetNotes)
+	api.GET("/note/:id", app.NoteController.GetNote)
+	api.POST("/note", app.NoteController.CreateNote)
+	api.PATCH("/note/:id", app.NoteController.UpdateNote)
+	api.DELETE("/note/:id", app.NoteController.DeleteNote)
 
 	// auth
 	auth := api.Group("/auth")
-	auth.POST("/login", controllers.NewAuthController(repository.NewAuthRepository()).Login)
-	auth.POST("/register", controllers.NewAuthController(repository.NewAuthRepository()).Register)
+	auth.POST("/login", app.AuthController.Login)
+	auth.POST("/register", app.AuthController.Register)
 
 	api.Use(middlewares.JWTAuthMiddleware())
 
 	// user
 	user := api.Group("/user")
-	user.GET("/me", controllers.NewUserController(repository.NewUserRepository()).GetMe)
-	user.POST("/update", controllers.NewUserController(repository.NewUserRepository()).Update)
+	user.GET("/me", app.UserController.GetMe)
+	user.POST("/update", app.UserController.Update)
 
 	// recipes
-	api.GET("/recipes", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).GetRecipes)
-	api.GET("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).GetRecipe)
-	api.POST("/recipe", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).CreateRecipe)
-	api.PATCH("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).UpdateRecipe)
-	api.DELETE("/recipe/:id", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).DeleteRecipe)
-	api.GET("/recipe/saves", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).SavedRecipeIndex)
-	api.POST("/recipe/save/:id", controllers.NewRecipeController(repository.NewRecipeRepository(repository.NewNotificationRepository())).SavedRecipe)
+	api.GET("/recipes", app.RecipeController.GetRecipes)
+	api.GET("/recipe/:id", app.RecipeController.GetRecipe)
+	api.POST("/recipe", app.RecipeController.CreateRecipe)
+	api.PATCH("/recipe/:id", app.RecipeController.UpdateRecipe)
+	api.DELETE("/recipe/:id", app.RecipeController.DeleteRecipe)
+	api.GET("/recipe/saves", app.RecipeController.SavedRecipeIndex)
+	api.POST("/recipe/save/:id", app.RecipeController.SavedRecipe)
 
 	// likes
-	api.GET("/likes/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository(repository.NewNotificationRepository())).GetLikesByRecipe)
-	api.POST("/like/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository(repository.NewNotificationRepository())).LikeByRecipe)
-	api.POST("/unlike/recipe/:id", controllers.NewLikeController(repository.NewLikeRepository(repository.NewNotificationRepository())).UnlikeByRecipe)
+	api.GET("/likes/recipe/:id", app.LikeController.GetLikesByRecipe)
+	api.POST("/like/recipe/:id", app.LikeController.LikeByRecipe)
+	api.POST("/unlike/recipe/:id", app.LikeController.UnlikeByRecipe)
 
 	// comments
-	api.GET("/comments/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository(repository.NewNotificationRepository())).GetCommentsByRecipe)
-	api.POST("/comment/recipe/:id", controllers.NewCommentController(repository.NewCommentRepository(repository.NewNotificationRepository())).CommentByRecipe)
-	api.DELETE("/comment/:id", controllers.NewCommentController(repository.NewCommentRepository(repository.NewNotificationRepository())).DeleteComment)
+	api.GET("/comments/recipe/:id", app.CommentController.GetCommentsByRecipe)
+	api.POST("/comment/recipe/:id", app.CommentController.CommentByRecipe)
+	api.DELETE("/comment/:id", app.CommentController.DeleteComment)
 
 	// notifications
-	api.GET("/notifications", controllers.NewNotificationController(repository.NewNotificationRepository()).GetNotifications)
+	api.GET("/notifications", app.NotificationController.GetNotifications)
 }

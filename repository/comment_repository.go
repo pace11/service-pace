@@ -103,11 +103,11 @@ func (r *commentRepo) Save(c *gin.Context, id string, comment *models.CommentDTO
 func (r *commentRepo) Delete(id string) (any, int, string, map[string]string) {
 	var existing models.Comment
 
-	if err := config.DB.First(&existing, id).Error; err != nil {
+	if err := config.DB.Where("id = ?", id).First(&existing).Error; err != nil {
 		return nil, http.StatusNotFound, "comment", nil
 	}
 
-	result := config.DB.Delete(&models.Comment{}, existing.ID)
+	result := config.DB.Where("id = ?", existing.ID).Delete(&models.Comment{})
 
 	if result.Error != nil {
 		return nil, http.StatusInternalServerError, "comment", nil

@@ -25,6 +25,7 @@ import (
 	"os"
 	"service-pace11/config"
 	"service-pace11/routes"
+	"service-pace11/wire"
 
 	_ "service-pace11/docs"
 
@@ -55,6 +56,7 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	config.ConnectDB()
-	routes.SetupRoutes(r)
+	app := wire.InitApp()
+	routes.SetupRoutes(r, app)
 	r.Run(os.Getenv("APP_PORT"))
 }
