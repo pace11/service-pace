@@ -664,7 +664,7 @@ paths:
       tags:
       - User
   /user/update:
-    get:
+    post:
       consumes:
       - application/json
       description: Update user data from jwt token

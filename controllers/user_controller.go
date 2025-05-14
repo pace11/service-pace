@@ -39,7 +39,7 @@ func (ctl *UserController) GetMe(c *gin.Context) {
 // @Param payload body models.UserUpdateDTO true "User payload"
 // @Success 200 {object} utils.StandardResponses
 // @Security BearerAuth
-// @Router /user/update [get]
+// @Router /user/update [POST]
 func (ctl *UserController) Update(c *gin.Context) {
 	var user models.UserUpdateDTO
 

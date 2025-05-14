@@ -876,7 +876,7 @@ const docTemplate = `{
             }
         },
         "/user/update": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []

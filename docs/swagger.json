@@ -870,7 +870,7 @@
             }
         },
         "/user/update": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
