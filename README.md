@@ -177,3 +177,4 @@ func InitApp() *App {
 }
 
 ```
+- And the last one, you need to update `main.go` and `routes.go` 

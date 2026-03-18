@@ -19,7 +19,8 @@ func InitApp() *App {
 	// repository
 	noteRepo := repository.NewNoteRepository()
 	notificationRepo := repository.NewNotificationRepository()
-	authRepo := repository.NewAuthRepository()
+	sentEmazilRepo := repository.NewSentEmailRepository()
+	authRepo := repository.NewAuthRepository(sentEmazilRepo)
 	commentRepo := repository.NewCommentRepository(notificationRepo)
 	likeRepo := repository.NewLikeRepository(notificationRepo)
 	recipeRepo := repository.NewRecipeRepository(notificationRepo)

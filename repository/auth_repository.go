@@ -13,10 +13,14 @@ type AuthRepository interface {
 	Register(register *models.RegisterDTO) (any, int, string, map[string]string)
 }
 
-type authRepository struct{}
+type authRepository struct {
+	sentEmailRepository SentEmailRepository
+}
 
-func NewAuthRepository() AuthRepository {
-	return &authRepository{}
+func NewAuthRepository(sentEmailRepository SentEmailRepository) AuthRepository {
+	return &authRepository{
+		sentEmailRepository: sentEmailRepository,
+	}
 }
 
 func (r *authRepository) Login(login *models.LoginDTO) (any, int, string, map[string]string) {
@@ -69,6 +73,8 @@ func (r *authRepository) Register(register *models.RegisterDTO) (any, int, strin
 			"message": err.Error(),
 		}
 	}
+
+	r.sentEmailRepository.SentEmail(register.Email)
 
 	return registerPayload, http.StatusCreated, "user", nil
 }
